@@ -230,7 +230,7 @@ def remove_node_dockerfile():
 
 
 def main():
-    debug = "{{ cookiecutter.debug }}".lower() == "y"
+    debug = False
 
     set_flags_in_envs(
         DEBUG_VALUE if debug else generate_random_user(),
