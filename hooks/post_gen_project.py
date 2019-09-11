@@ -243,12 +243,6 @@ def main():
     append_to_gitignore_file(".envs/*")
     append_to_gitignore_file("!.envs/.local/")
 
-    if "{{ cookiecutter.cloud_provider}}".lower() == "none":
-        print(
-            WARNING + "You chose not to use a cloud provider, "
-            "media files won't be served in production." + TERMINATOR
-        )
-
     if "{{ cookiecutter.use_travisci }}".lower() == "n":
         remove_dottravisyml_file()
 

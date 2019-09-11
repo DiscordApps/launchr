@@ -8,11 +8,6 @@
   "version": "0.1.0",
   "timezone": "UTC",
   "windows": "n",
-  "cloud_provider": [
-    "AWS",
-    "GCP",
-    "None"
-  ],
   "use_compressor": "n",
   "use_celery": "n",
   "use_sentry": "n",
