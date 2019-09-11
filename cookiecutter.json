@@ -9,7 +9,6 @@
   "timezone": "UTC",
   "windows": "n",
   "use_pycharm": "n",
-  "use_docker": "n",
   "cloud_provider": [
     "AWS",
     "GCP",

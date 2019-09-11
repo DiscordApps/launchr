@@ -31,7 +31,6 @@ def context():
 
 @pytest_fixture_plus
 @pytest.mark.parametrize("windows", YN_CHOICES, ids=lambda yn: f"win:{yn}")
-@pytest.mark.parametrize("use_docker", YN_CHOICES, ids=lambda yn: f"docker:{yn}")
 @pytest.mark.parametrize("use_celery", YN_CHOICES, ids=lambda yn: f"celery:{yn}")
 @pytest.mark.parametrize("use_mailhog", YN_CHOICES, ids=lambda yn: f"mailhog:{yn}")
 @pytest.mark.parametrize("use_sentry", YN_CHOICES, ids=lambda yn: f"sentry:{yn}")
@@ -40,7 +39,6 @@ def context():
 @pytest.mark.parametrize("cloud_provider", CLOUD_CHOICES, ids=lambda yn: f"cloud:{yn}")
 def context_combination(
     windows,
-    use_docker,
     use_celery,
     use_sentry,
     use_compressor,
@@ -50,7 +48,6 @@ def context_combination(
     """Fixture that parametrize the function where it's used."""
     return {
         "windows": windows,
-        "use_docker": use_docker,
         "use_compressor": use_compressor,
         "use_celery": use_celery,
         "use_sentry": use_sentry,
