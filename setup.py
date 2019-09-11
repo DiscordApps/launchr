@@ -17,7 +17,7 @@ if sys.argv[-1] == "tag":
     os.system("git push --tags")
     sys.exit()
 
-with open("README.rst") as readme_file:
+with open("README.md") as readme_file:
     long_description = readme_file.read()
 
 setup(
