@@ -18,7 +18,6 @@
   "use_celery": "n",
   "use_sentry": "n",
   "use_whitenoise": "n",
-  "use_heroku": "n",
   "use_travisci": "n",
   "debug": "n"
 }

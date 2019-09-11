@@ -39,19 +39,6 @@ def remove_pycharm_files():
     if os.path.exists(docs_dir_path):
         shutil.rmtree(docs_dir_path)
 
-
-def remove_heroku_files():
-    file_names = ["Procfile", "runtime.txt", "requirements.txt"]
-    for file_name in file_names:
-        if (
-            file_name == "requirements.txt"
-            and "{{ cookiecutter.use_travisci }}".lower() == "y"
-        ):
-            # don't remove the file if we are using travisci but not using heroku
-            continue
-        os.remove(file_name)
-
-
 def remove_celery_files():
     file_names = [
         os.path.join("config", "celery_app.py"),
@@ -254,9 +241,6 @@ def main():
 
     if "{{ cookiecutter.use_pycharm }}".lower() == "n":
         remove_pycharm_files()
-
-    if "{{ cookiecutter.use_heroku }}".lower() == "n":
-        remove_heroku_files()
 
     append_to_gitignore_file(".env")
     append_to_gitignore_file(".envs/*")
