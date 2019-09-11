@@ -8,7 +8,6 @@
   "version": "0.1.0",
   "timezone": "UTC",
   "windows": "n",
-  "use_pycharm": "n",
   "cloud_provider": [
     "AWS",
     "GCP",

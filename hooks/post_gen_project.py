@@ -239,9 +239,6 @@ def main():
     )
     set_flags_in_settings_files()
 
-    if "{{ cookiecutter.use_pycharm }}".lower() == "n":
-        remove_pycharm_files()
-
     append_to_gitignore_file(".env")
     append_to_gitignore_file(".envs/*")
     append_to_gitignore_file("!.envs/.local/")
