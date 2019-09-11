@@ -336,9 +336,6 @@ pip-selfcheck.json
 {% endif %}
 
 ### Project template
-{% if cookiecutter.use_mailhog == 'y' and cookiecutter.use_docker == 'n' %}
-MailHog
-{%- endif %}
 {{ cookiecutter.project_slug }}/media/
 
 .pytest_cache/
