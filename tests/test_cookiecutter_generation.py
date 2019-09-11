@@ -31,14 +31,12 @@ def context():
 
 @pytest_fixture_plus
 @pytest.mark.parametrize("windows", YN_CHOICES, ids=lambda yn: f"win:{yn}")
-@pytest.mark.parametrize("use_celery", YN_CHOICES, ids=lambda yn: f"celery:{yn}")
 @pytest.mark.parametrize("use_mailhog", YN_CHOICES, ids=lambda yn: f"mailhog:{yn}")
 @pytest.mark.parametrize("use_sentry", YN_CHOICES, ids=lambda yn: f"sentry:{yn}")
 @pytest.mark.parametrize("use_compressor", YN_CHOICES, ids=lambda yn: f"cmpr:{yn}")
 @pytest.mark.parametrize("use_whitenoise", YN_CHOICES, ids=lambda yn: f"wnoise:{yn}")
 def context_combination(
     windows,
-    use_celery,
     use_sentry,
     use_compressor,
     use_whitenoise,
@@ -47,7 +45,6 @@ def context_combination(
     return {
         "windows": windows,
         "use_compressor": use_compressor,
-        "use_celery": use_celery,
         "use_sentry": use_sentry,
         "use_whitenoise": use_whitenoise,
     }

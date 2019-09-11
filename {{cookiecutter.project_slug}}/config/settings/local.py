@@ -51,13 +51,11 @@ INTERNAL_IPS += [ip[:-1] + "1" for ip in ips]
 # ------------------------------------------------------------------------------
 # https://django-extensions.readthedocs.io/en/latest/installation_instructions.html#configuration
 INSTALLED_APPS += ["django_extensions"]  # noqa F405
-{% if cookiecutter.use_celery == 'y' -%}
 
 # Celery
 # ------------------------------------------------------------------------------
 # http://docs.celeryproject.org/en/latest/userguide/configuration.html#task-eager-propagates
 CELERY_TASK_EAGER_PROPAGATES = True
 
-{%- endif %}
 # Your stuff...
 # ------------------------------------------------------------------------------

@@ -69,9 +69,7 @@ THIRD_PARTY_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "rest_framework",
-{%- if cookiecutter.use_celery == 'y' %}
     "django_celery_beat",
-{%- endif %}
 ]
 
 LOCAL_APPS = [
@@ -246,7 +244,6 @@ LOGGING = {
     "root": {"level": "INFO", "handlers": ["console"]},
 }
 
-{% if cookiecutter.use_celery == 'y' -%}
 # Celery
 # ------------------------------------------------------------------------------
 if USE_TZ:
@@ -271,7 +268,6 @@ CELERY_TASK_SOFT_TIME_LIMIT = 60
 # http://docs.celeryproject.org/en/latest/userguide/configuration.html#beat-scheduler
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 
-{%- endif %}
 # django-allauth
 # ------------------------------------------------------------------------------
 ACCOUNT_ALLOW_REGISTRATION = env.bool("DJANGO_ACCOUNT_ALLOW_REGISTRATION", True)

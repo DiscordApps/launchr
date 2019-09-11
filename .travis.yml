@@ -24,9 +24,9 @@ matrix:
     - name: Basic Docker
       script: sh tests/test_docker.sh
     - name: Docker with Celery
-      script: sh tests/test_docker.sh use_celery=y
+      script: sh tests/test_docker.sh
     - name: Bare metal
-      script: sh tests/test_bare.sh use_celery=y use_compressor=y
+      script: sh tests/test_bare.sh use_compressor=y
       services:
         - postgresql
         - redis-server

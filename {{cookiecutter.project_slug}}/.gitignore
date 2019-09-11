@@ -62,10 +62,8 @@ target/
 # pyenv
 .python-version
 
-{% if cookiecutter.use_celery == 'y' -%}
 # celery beat schedule file
 celerybeat-schedule
-{%- endif %}
 
 # Environments
 .venv

@@ -9,7 +9,6 @@
   "timezone": "UTC",
   "windows": "n",
   "use_compressor": "n",
-  "use_celery": "n",
   "use_sentry": "n",
   "use_whitenoise": "n",
   "use_travisci": "n"
