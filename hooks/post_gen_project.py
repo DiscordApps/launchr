@@ -113,6 +113,7 @@ def set_django_secret_key(file_path):
     django_secret_key = set_flag(
         file_path,
         "!!!SET DJANGO_SECRET_KEY!!!",
+        value=os.environ.get("LAUNCHR_DJANGO_SECRET_KEY", None),
         length=64,
         using_digits=True,
         using_ascii_letters=True,
@@ -124,6 +125,7 @@ def set_django_admin_url(file_path):
     django_admin_url = set_flag(
         file_path,
         "!!!SET DJANGO_ADMIN_URL!!!",
+        value=os.environ.get("LAUNCHR_DJANGO_ADMIN_URL", None),
         formatted="{}/",
         length=32,
         using_digits=True,
@@ -136,16 +138,18 @@ def generate_random_user():
     return generate_random_string(length=32, using_ascii_letters=True)
 
 
-def generate_postgres_user(debug=False):
-    return DEBUG_VALUE if debug else generate_random_user()
-
-
 def set_postgres_user(file_path, value):
-    postgres_user = set_flag(file_path, "!!!SET POSTGRES_USER!!!", value=value)
+    postgres_user = set_flag(
+        file_path,
+        "!!!SET POSTGRES_USER!!!",
+        value=value
+    )
     return postgres_user
 
 
 def set_postgres_password(file_path, value=None):
+    if os.environ.get("LAUNCHR_POSTGRES_PASSWORD", False):
+        value = os.environ.get("LAUNCHR_POSTGRES_PASSWORD")
     postgres_password = set_flag(
         file_path,
         "!!!SET POSTGRES_PASSWORD!!!",
@@ -165,6 +169,8 @@ def set_celery_flower_user(file_path, value):
 
 
 def set_celery_flower_password(file_path, value=None):
+    if os.environ.get("LAUNCHR_CELERY_FLOWER_PASSWORD", False):
+        value = os.environ.get("LAUNCHR_CELERY_FLOWER_PASSWORD")
     celery_flower_password = set_flag(
         file_path,
         "!!!SET CELERY_FLOWER_PASSWORD!!!",
@@ -182,7 +188,7 @@ def append_to_gitignore_file(s):
         gitignore_file.write(os.linesep)
 
 
-def set_flags_in_envs(postgres_user, celery_flower_user, debug=False):
+def set_flags_in_envs(postgres_user, celery_flower_user):
     local_django_envs_path = os.path.join(".envs", ".local", ".django")
     production_django_envs_path = os.path.join(".envs", ".production", ".django")
     local_postgres_envs_path = os.path.join(".envs", ".local", ".postgres")
@@ -192,22 +198,14 @@ def set_flags_in_envs(postgres_user, celery_flower_user, debug=False):
     set_django_admin_url(production_django_envs_path)
 
     set_postgres_user(local_postgres_envs_path, value=postgres_user)
-    set_postgres_password(
-        local_postgres_envs_path, value=DEBUG_VALUE if debug else None
-    )
+    set_postgres_password(local_postgres_envs_path)
     set_postgres_user(production_postgres_envs_path, value=postgres_user)
-    set_postgres_password(
-        production_postgres_envs_path, value=DEBUG_VALUE if debug else None
-    )
+    set_postgres_password(production_postgres_envs_path)
 
     set_celery_flower_user(local_django_envs_path, value=celery_flower_user)
-    set_celery_flower_password(
-        local_django_envs_path, value=DEBUG_VALUE if debug else None
-    )
+    set_celery_flower_password(local_django_envs_path)
     set_celery_flower_user(production_django_envs_path, value=celery_flower_user)
-    set_celery_flower_password(
-        production_django_envs_path, value=DEBUG_VALUE if debug else None
-    )
+    set_celery_flower_password(production_django_envs_path)
 
 
 def set_flags_in_settings_files():
@@ -230,12 +228,17 @@ def remove_node_dockerfile():
 
 
 def main():
-    debug = False
-
+    if os.environ.get("LAUNCHR_POSTGRES_USER", False):
+        postgres_user = os.environ.get("LAUNCHR_POSTGRES_USER")
+    else:
+        postgres_user = generate_random_user()
+    if os.environ.get("LAUNCHR_CELERY_FLOWER_USER", False):
+        celery_flower_user = os.environ.get("LAUNCHR_CELERY_FLOWER_USER")
+    else:
+        celery_flower_user = generate_random_user()
     set_flags_in_envs(
-        DEBUG_VALUE if debug else generate_random_user(),
-        DEBUG_VALUE if debug else generate_random_user(),
-        debug=debug,
+        postgres_user=postgres_user,
+        celery_flower_user=celery_flower_user,
     )
     set_flags_in_settings_files()
 
