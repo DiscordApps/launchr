@@ -35,5 +35,5 @@ cookiecutter https://github.com/jayfk/launchr
 
 Start up the stack with
 ```
-docker-compose -f dev.yml up
+docker-compose -f local.yml up
 ```
