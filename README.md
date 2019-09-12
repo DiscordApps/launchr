@@ -1,3 +1,39 @@
-# launchr
+<p align="center">
+  <a href="" rel="noopener">
+ <img width=200px height=200px src="https://raw.githubusercontent.com/jayfk/launchr/master/logo.png" alt="Launchr"></a>
+</p>
 
-Launchr is an open source SaaS starter kit. Coming soon.
+<h3 align="center">Project Title</h3>
+
+<div align="center">
+
+  [![Status](https://img.shields.io/badge/status-active-success.svg)]() 
+  [![GitHub Issues](https://img.shields.io/github/issues/jayfk/launchr.svg)](https://github.com/kylelobo/The-Documentation-Compendium/issues)
+  [![GitHub Pull Requests](https://img.shields.io/github/issues-pr/jayfk/launchr.svg)](https://github.com/kylelobo/The-Documentation-Compendium/pulls)
+  [![License](https://img.shields.io/badge/license-MIT-blue.svg)](/LICENSE)
+
+</div>
+
+---
+
+<p align="center"> 
+    Launchr is an open source SaaS starter kit.<br> 
+</p>
+
+## Getting Started <a name = "getting_started"></a>
+Launchr is at a very early stage. If you want to try it out, follow the examples below.
+
+### Prerequisites
+Install [Docker](https://docs.docker.com/install/) and [Docker Compose](https://docs.docker.com/compose/install/).
+
+### Installing
+Generate a new project by running
+```
+pip install cookiecutter
+cookiecutter https://github.com/jayfk/launchr
+```
+
+Start up the stack with
+```
+docker-compose -f dev.yml up
+```
