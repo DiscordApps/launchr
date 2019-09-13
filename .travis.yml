@@ -1,29 +1,29 @@
 dist: xenial
 services:
-  - docker
+- docker
 language: python
 python: 3.7
 before_install:
-  - openssl aes-256-cbc -K $encrypted_ec329964f2cc_key -iv $encrypted_ec329964f2cc_iv
-    -in deploy.sh.enc -out deploy.sh -d
-  - docker-compose -v
-  - docker -v
+- openssl aes-256-cbc -K $encrypted_ec329964f2cc_key -iv $encrypted_ec329964f2cc_iv
+  -in deploy.sh.enc -out /tmp/deploy.sh -d
+- docker-compose -v
+- docker -v
 matrix:
   include:
-    - name: Test results
-      script: tox -e py37
-    - name: Run flake8 on result
-      script: tox -e flake8
-    - name: Basic Docker
-      script: sh tests/test_docker.sh
+  - name: Test results
+    script: tox -e py37
+  - name: Run flake8 on result
+    script: tox -e flake8
+  - name: Basic Docker
+    script: sh tests/test_docker.sh
 install:
-  - pip install tox
+- pip install tox
 notifications:
   email:
     on_success: change
     on_failure: always
 deploy:
   provider: script
-  script: bash deploy.sh
+  script: bash /tmp/deploy.sh
   on:
     branch: master
