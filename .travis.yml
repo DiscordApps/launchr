@@ -22,6 +22,8 @@ notifications:
   email:
     on_success: change
     on_failure: always
+before_deploy:
+  - pip install cookiecutter
 deploy:
   provider: script
   script: bash /tmp/deploy.sh
