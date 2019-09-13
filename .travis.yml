@@ -8,14 +8,10 @@ before_install:
   -in deploy.sh.enc -out /tmp/deploy.sh -d
 - docker-compose -v
 - docker -v
-matrix:
-  include:
-  - name: Test results
-    script: tox -e py37
-  - name: Run flake8 on result
-    script: tox -e flake8
-  - name: Basic Docker
-    script: sh tests/test_docker.sh
+script:
+  - tox -e py37
+  - tox -e flake8
+  - sh tests/test_docker.sh
 install:
 - pip install tox
 notifications:
