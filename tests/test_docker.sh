@@ -6,7 +6,7 @@
 set -o errexit
 
 # install test requirements
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 
 # create a cache directory
 mkdir -p .cache/docker

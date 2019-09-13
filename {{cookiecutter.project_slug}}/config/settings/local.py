@@ -1,5 +1,6 @@
 from .base import *  # noqa
 from .base import env
+import socket
 
 # GENERAL
 # ------------------------------------------------------------------------------
@@ -43,7 +44,6 @@ DEBUG_TOOLBAR_CONFIG = {
 }
 # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html#internal-ips
 INTERNAL_IPS = ["127.0.0.1", "10.0.2.2"]
-import socket
 hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
 INTERNAL_IPS += [ip[:-1] + "1" for ip in ips]
 
