@@ -228,4 +228,4 @@ pip-selfcheck.json
 
 .pytest_cache/
 deploy.sh
-deploy.sh.enc
+deploy.sh
