@@ -10,11 +10,19 @@ urlpatterns = [
     path(
         "about/", TemplateView.as_view(template_name="pages/about.html"), name="about"
     ),
+    path(
+        "pricing/", TemplateView.as_view(template_name="pages/pricing.html"), name="pricing"
+    ),
+    path(
+        "tos/", TemplateView.as_view(template_name="pages/tos.html"), name="tos"
+    ),
+    path(
+        "privacy-policy/", TemplateView.as_view(template_name="pages/privacy-policy.html"), name="privacy-policy"
+    ),
     # Django Admin, use {% raw %}{% url 'admin:index' %}{% endraw %}
     path(settings.ADMIN_URL, admin.site.urls),
-    # User management
-    path("users/", include("{{ cookiecutter.project_slug }}.users.urls", namespace="users")),
-    path("accounts/", include("allauth.urls")),
+    path("app/", include("{{ cookiecutter.project_slug }}.app.urls", namespace="app")),
+    path("auth/", include("allauth.urls")),
     # Your stuff: custom urls includes go here
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

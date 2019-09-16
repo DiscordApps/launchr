@@ -1,0 +1,50 @@
+{% raw %}{% extends "app/base.html" %}{% endraw %}
+{% raw %}{% load static i18n %}{% endraw %}
+
+{% raw %}{% block title %}{% trans "Profile" %}{% endblock %}{% endraw %}
+
+{% raw %}{% block content %}{% endraw %}
+<div class="container-fluid mt--7">
+  <!-- Table -->
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <h3 class="mb-0">Icons</h3>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-sm-12">
+
+              <h2>{% raw %}{{ object.username }}{% endraw %}</h2>
+              {% raw %}{% if object.name %}{% endraw %}
+              <p>{% raw %}{{ object.name }}{% endraw %}</p>
+              {% raw %}{% endif %}{% endraw %}
+            </div>
+          </div>
+
+          {% raw %}{% if object == request.user %}{% endraw %}
+          <!-- Action buttons -->
+          <div class="row">
+
+            <div class="col-sm-12">
+              <a class="btn btn-primary" href="{% raw %}{% url 'app:users:update' %}{% endraw %}" role="button">My
+                Info</a>
+              <a class="btn btn-primary" href="{% raw %}{% url 'account_email' %}{% endraw %}" role="button">E-Mail</a>
+              <!-- Your Stuff: Custom user template urls -->
+            </div>
+
+          </div>
+          <!-- End Action buttons -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% raw %}{% endif %}{% endraw %}
+
+
+{% raw %}{% endblock content %}{% endraw %}
+

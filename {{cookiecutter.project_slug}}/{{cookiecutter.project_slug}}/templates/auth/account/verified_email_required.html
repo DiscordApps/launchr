@@ -1,0 +1,24 @@
+{% raw %}{% extends "account/base.html" %}{% endraw %}
+
+{% raw %}{% load i18n %}{% endraw %}
+
+{% raw %}{% block head_title %}{% trans "Verify Your E-mail Address" %}{% endblock %}{% endraw %}
+
+{% raw %}{% block inner %}{% endraw %}
+<h1>{% raw %}{% trans "Verify Your E-mail Address" %}{% endraw %}</h1>
+
+{% raw %}{% url 'account_email' as email_url %}{% endraw %}
+
+<p>{% raw %}{% blocktrans %}{% endraw %}This part of the site requires us to verify that
+you are who you claim to be. For this purpose, we require that you
+verify ownership of your e-mail address. {% raw %}{% endblocktrans %}{% endraw %}</p>
+
+<p>{% raw %}{% blocktrans %}{% endraw %}We have sent an e-mail to you for
+verification. Please click on the link inside this e-mail. Please
+contact us if you do not receive it within a few minutes.{% raw %}{% endblocktrans %}{% endraw %}</p>
+
+<p>{% raw %}{% blocktrans %}{% endraw %}<strong>Note:</strong> you can still <a href="{% raw %}{{ email_url }}{% endraw %}">change your e-mail address</a>.{% raw %}{% endblocktrans %}{% endraw %}</p>
+
+
+{% raw %}{% endblock %}{% endraw %}
+

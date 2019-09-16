@@ -1,0 +1,31 @@
+{% raw %}{% extends "app/base.html" %}{% endraw %}
+{% raw %}{% load crispy_forms_tags i18n %}{% endraw %}
+
+{% raw %}{% block title %}{{ user.username }}{% endblock %}{% endraw %}
+
+{% raw %}{% block content %}{% endraw %}
+<div class="container-fluid mt--7">
+  <!-- Table -->
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <h3 class="mb-0">Icons</h3>
+        </div>
+        <div class="card-body">
+          <h1>{% raw %}{{ user.username }}{% endraw %}</h1>
+          <form class="form-horizontal" method="post" action="{% raw %}{% url 'app:users:update' %}{% endraw %}">
+            {% raw %}{% csrf_token %}{% endraw %}
+            {% raw %}{{ form|crispy }}{% endraw %}
+            <div class="control-group">
+              <div class="controls">
+                <button type="submit" class="btn">{% raw %}{% trans "Update" %}{% endraw %}</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% raw %}{% endblock %}{% endraw %}

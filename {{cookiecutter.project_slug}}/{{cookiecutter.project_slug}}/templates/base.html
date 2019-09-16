@@ -1,107 +1,150 @@
-{% raw %}{% load static i18n {% endraw %}{% if cookiecutter.use_compressor == "y" %}compress{% endif %}{% raw %}%}<!DOCTYPE html>
+{% raw %}{% comment %}
+<!--
+
+=========================================================
+* Argon Design System - v1.1.0
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/argon-design-system
+* Copyright 2019 Creative Tim (https://www.creative-tim.com)
+* Licensed under MIT (https://github.com/creativetimofficial/argon-dashboard/blob/master/LICENSE.md)
+
+* Coded by Creative Tim
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. -->
+{% endcomment %}{% endraw %}
+{% raw %}{% load static i18n %}{% endraw %}
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>{% block title %}{% endraw %}{{ cookiecutter.project_name }}{% raw %}{% endblock title %}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="{% raw %}{% block meta_descr %}{% endblock %}{% endraw %}">
+  <meta name="author" content="{% raw %}{% block meta_author %}{% endraw %}{{ cookiecutter.project_name }}{% raw %}{% endblock %}{% endraw %}">
+  <title>{% raw %}{% block title %}{% endblock %}{% endraw %}</title>
+  <!-- Favicon -->
+  <link href="{% raw %}{% static '/img/brand/favicon.png' %}{% endraw %}" rel="icon" type="image/png">
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+  <!-- Icons -->
+  <link href="{% raw %}{% static '/vendor/nucleo/css/nucleo.css' %}{% endraw %}" rel="stylesheet">
+  <link href="{% raw %}{% static '/vendor/font-awesome/css/font-awesome.min.css' %}{% endraw %}" rel="stylesheet">
+  <!-- Argon CSS -->
+  <link type="text/css" href="{% raw %}{% static '/css/style.css' %}{% endraw %}" rel="stylesheet">
+</head>
 
-    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <![endif]-->
-
-    <link rel="icon" href="{% static 'images/favicons/favicon.ico' %}">
-    {% block css %}
-    <!-- Latest compiled and minified Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <!-- Your stuff: Third-party CSS libraries go here -->
-    {% endraw %}{% if cookiecutter.use_compressor == "y" %}{% raw %}{% compress css %}{% endraw %}{% endif %}{% raw %}
-    <!-- This file stores project-specific CSS -->
-    <link href="{% static 'css/project.css' %}" rel="stylesheet">
-    {% endraw %}{% if cookiecutter.use_compressor == "y" %}{% raw %}{% endcompress %}{% endraw %}{% endif %}{% raw %}
-    {% endblock %}
-
-  </head>
-
-  <body>
-
-    <div class="mb-1">
-      <nav class="navbar navbar-expand-md navbar-light bg-light">
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+<body>
+  <header class="header-global">
+    <nav id="navbar-main" class="navbar navbar-main navbar-expand-lg navbar-transparent navbar-light headroom">
+      <div class="container">
+        <a class="navbar-brand mr-lg-5" href="{% raw %}{% url 'home' %}{% endraw %}">
+          <img alt="image" src="{% raw %}{% static '/img/brand/logo_white.png' %}{% endraw %}">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar_global" aria-controls="navbar_global" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <a class="navbar-brand" href="{% url 'home' %}">{% endraw %}{{ cookiecutter.project_name }}{% raw %}</a>
-
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-              <a class="nav-link" href="{% url 'home' %}">Home <span class="sr-only">(current)</span></a>
-            </li>
+        <div class="navbar-collapse collapse" id="navbar_global">
+          
+          <ul class="navbar-nav navbar-nav-hover align-items-lg-center">
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'about' %}">About</a>
+              <a href="{% raw %}{% url 'pricing' %}{% endraw %}" class="nav-link" role="button">
+                <i class="ni ni-ui-04 d-lg-none"></i>
+                <span class="nav-link-inner--text">{% raw %}{% trans "Pricing" %}{% endraw %}</span>
+              </a>
             </li>
-            {% if request.user.is_authenticated %}
-              <li class="nav-item">
-                {# URL provided by django-allauth/account/urls.py #}
-                <a class="nav-link" href="{% url 'users:detail' request.user.username  %}">{% trans "My Profile" %}</a>
-              </li>
-              <li class="nav-item">
-                {# URL provided by django-allauth/account/urls.py #}
-                <a class="nav-link" href="{% url 'account_logout' %}">{% trans "Sign Out" %}</a>
-              </li>
-            {% else %}
-              <li class="nav-item">
-                {# URL provided by django-allauth/account/urls.py #}
-                <a id="sign-up-link" class="nav-link" href="{% url 'account_signup' %}">{% trans "Sign Up" %}</a>
-              </li>
-              <li class="nav-item">
-                {# URL provided by django-allauth/account/urls.py #}
-                <a id="log-in-link" class="nav-link" href="{% url 'account_login' %}">{% trans "Sign In" %}</a>
-              </li>
-            {% endif %}
+          </ul>
+          <ul class="navbar-nav align-items-lg-center ml-lg-auto">
+            {% raw %}{% if request.user.is_authenticated %}{% endraw %}
+              <li class="nav-item d-none d-lg-block ml-lg-4">
+              <a href="{% raw %}{% url "app:dashboard" %}{% endraw %}"  class="btn btn-neutral btn-icon">
+                <span class="btn-inner--icon">
+                  <i class="fa fa-cloud-download mr-2"></i>
+                </span>
+                <span class="nav-link-inner--text">{% raw %}{% trans "Account" %}{% endraw %}</span>
+              </a>
+            </li>
+
+            {% raw %}{% else %}{% endraw %}
+            <li class="nav-item">
+              <a href="{% raw %}{% url 'account_login' %}{% endraw %}" class="nav-link">
+                <i class="ni ni-collection d-lg-none"></i>
+                <span class="nav-link-inner--text">{% raw %}{% trans "Login" %}{% endraw %}</span>
+              </a>
+
+            </li>
+            <li class="nav-item d-none d-lg-block ml-lg-4">
+              <a href="{% raw %}{% url 'account_signup' %}{% endraw %}"  class="btn btn-neutral btn-icon">
+                <span class="btn-inner--icon">
+                  <i class="fa fa-cloud-download mr-2"></i>
+                </span>
+                <span class="nav-link-inner--text">{% raw %}{% trans "Sign Up" %}{% endraw %}</span>
+              </a>
+            </li>
+            {% raw %}{% endif %}{% endraw %}
           </ul>
         </div>
-      </nav>
+      </div>
+    </nav>
+  </header>
+  <main>
+    {% raw %}{% block content %}{% endraw %}
 
-    </div>
-
+    {% raw %}{% endblock %}{% endraw %}
+  </main>
+  <footer class="footer">
     <div class="container">
+      <div class="row row-grid align-items-center my-md">
+        <div class="col-lg-6">
+          <h3 class="text-primary font-weight-light mb-2">Amazeballs!</h3>
+          <h4 class="mb-0 font-weight-light">Some people are using social networks.</h4>
+        </div>
+        <div class="col-lg-6 text-lg-center btn-wrapper">
+          <a href="#" class="btn btn-neutral btn-icon-only btn-twitter btn-round btn-lg">
+            <i class="fa fa-twitter"></i>
+          </a>
+          <a href="#" class="btn btn-neutral btn-icon-only btn-facebook btn-round btn-lg">
+            <i class="fa fa-facebook-square"></i>
+          </a>
+          <a href="#" class="btn btn-neutral btn-icon-only btn-dribbble btn-lg btn-round">
+            <i class="fa fa-dribbble"></i>
+          </a>
+          <a href="#" class="btn btn-neutral btn-icon-only btn-github btn-round btn-lg">
+            <i class="fa fa-github"></i>
+          </a>
+        </div>
+      </div>
+      <hr>
+      <div class="row align-items-center justify-content-md-between">
+        <div class="col-md-6">
+          <div class="copyright">
+            &copy; {% raw %}{% now "Y" %}{% endraw %} <a href="https://{{ cookiecutter.domain_name }}">{{ cookiecutter.domain_name }}</a>.
+          </div>
+        </div>
+        <div class="col-md-6">
+          <ul class="nav nav-footer justify-content-end">
+            <li class="nav-item">
+              <a href="{% raw %}{% url "privacy-policy" %}{% endraw %}" class="nav-link" >{% raw %}{% trans "Privacy Policy" %}{% endraw %}</a>
+            </li>
+            <li class="nav-item">
+              <a href="{% raw %}{% url "tos" %}{% endraw %}" class="nav-link" >{% raw %}{% trans "Terms of Service" %}{% endraw %}</a>
+            </li>
+            <li class="nav-item">
+              <a href="{% raw %}{% url "about" %}{% endraw %}" class="nav-link" >{% raw %}{% trans "About Us" %}{% endraw %}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <!-- Core -->
+  <script src="{% raw %}{% static 'vendor/jquery/jquery.min.js' %}{% endraw %}"></script>
+  <script src="{% raw %}{% static 'vendor/popper/popper.min.js' %}{% endraw %}"></script>
+  <script src="{% raw %}{% static 'vendor/bootstrap/bootstrap.min.js' %}{% endraw %}"></script>
+  <script src="{% raw %}{% static 'vendor/headroom/headroom.min.js' %}{% endraw %}"></script>
+  <!-- Argon JS -->
+  <script src="{% raw %}{% static 'js/argon.js' %}{% endraw %}"></script>
+</body>
 
-      {% if messages %}
-          {% for message in messages %}
-              <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">{{ message }}<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>
-          {% endfor %}
-      {% endif %}
-
-      {% block content %}
-        <p>Use this document as a way to quick start any new project.</p>
-      {% endblock content %}
-
-    </div> <!-- /container -->
-
-    {% block modal %}{% endblock modal %}
-
-    <!-- Le javascript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    {% block javascript %}
-      <!-- Vendor dependencies bundled as one file-->
-      {% endraw %}{% if cookiecutter.use_compressor == "y" %}{% raw %}{% compress js %}{% endraw %}{% endif %}{% raw %}
-      <script src="{% static 'js/vendors.js' %}"></script>
-      {% endraw %}{% if cookiecutter.use_compressor == "y" %}{% raw %}{% endcompress %}{% endraw %}{% endif %}{% raw %}
-      <!-- Bootstrap JS and its dependencies-->
-      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-      <!-- place project specific Javascript in this file -->
-      {% endraw %}{% if cookiecutter.use_compressor == "y" %}{% raw %}{% compress js %}{% endraw %}{% endif %}{% raw %}
-      <script src="{% static 'js/project.js' %}"></script>
-      {% endraw %}{% if cookiecutter.use_compressor == "y" %}{% raw %}{% endcompress %}{% endraw %}{% endif %}{% raw %}
-
-    {% endblock javascript %}
-  </body>
 </html>
- {% endraw %}

@@ -1,0 +1,57 @@
+{% raw %}{% extends "app/base.html" %}{% endraw %}
+
+{% raw %}{% load i18n %}{% endraw %}
+{% raw %}{% load crispy_forms_tags %}{% endraw %}
+{% raw %}{% load static %}{% endraw %}
+
+{% raw %}{% block head_title %}{% trans "Signup" %}{% endblock %}{% endraw %}
+
+{% raw %}{% block body_class %}bg-default{% endblock %}{% endraw %}
+{% raw %}{% block sidenav %}{% endblock %}{% endraw %}
+{% raw %}{% block topnav %}{% endblock %}{% endraw %}
+{% raw %}{% block breadcrumb %}{% endblock %}{% endraw %}
+{% raw %}{% block mainnav %}{% endraw %}
+<nav class="navbar navbar-top navbar-horizontal navbar-expand-md navbar-dark">
+      <div class="container px-4">
+        <a class="navbar-brand" href="{% raw %}{% url 'home' %}{% endraw %}">
+          <img src="{% raw %}{% static 'img/brand/logo.png' %}{% endraw %}">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse-main" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbar-collapse-main">
+          <!-- Collapse header -->
+          <div class="navbar-collapse-header d-md-none">
+            <div class="row">
+              <div class="col-6 collapse-brand">
+                <a href="{% raw %}{% url 'home' %}{% endraw %}">
+                  <img src="{% raw %}{% static 'img/brand/logo.png' %}{% endraw %}">
+                </a>
+              </div>
+              <div class="col-6 collapse-close">
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse-main" aria-controls="sidenav-main" aria-expanded="false" aria-label="Toggle sidenav">
+                  <span></span>
+                  <span></span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- Navbar items -->
+          <ul class="navbar-nav ml-auto">
+
+            <li class="nav-item">
+              <a class="nav-link nav-link-icon" href="{% raw %}{% url "pricing" %}{% endraw %}">
+                <span class="nav-link-inner--text">{% raw %}{% trans  "Pricing" %}{% endraw %}</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+{% raw %}{% endblock %}{% endraw %}
+{% raw %}{% block content %}{% endraw %}
+
+{% raw %}{% endblock %}{% endraw %}
+
+{% raw %}{% block footer_class %}py-5{% endblock %}{% endraw %}
+
