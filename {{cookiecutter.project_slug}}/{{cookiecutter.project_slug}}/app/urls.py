@@ -1,11 +1,11 @@
 from django.urls import include, path
 
 from {{ cookiecutter.project_slug }}.app.views import (
-    DashboardView
+    AppHomeView
 )
 
 app_name = "users"
 urlpatterns = [
-    path("", view=DashboardView.as_view(), name="dashboard"),
+    path("", view=AppHomeView.as_view(), name="home"),
     path("users/", include("{{ cookiecutter.project_slug }}.users.urls", namespace="users")),
 ]

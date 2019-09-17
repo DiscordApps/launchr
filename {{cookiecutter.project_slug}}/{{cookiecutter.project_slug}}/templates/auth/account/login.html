@@ -1,10 +1,9 @@
 {% raw %}{% extends "app/base_blank.html" %}{% endraw %}
 
 {% raw %}{% load i18n %}{% endraw %}
-{% raw %}{% load crispy_forms_tags %}{% endraw %}
-{% raw %}{% load static %}{% endraw %}
+{% raw %}{% load crispy_forms_tags socialaccount static %}{% endraw %}
 
-{% raw %}{% block head_title %}{% trans "Sign Up" %}{% endblock %}{% endraw %}
+{% raw %}{% block title %}{% trans "Login" %}{% endblock %}{% endraw %}
 
 {% raw %}{% block content %}{% endraw %}
   <div class="header bg-gradient-primary py-7 py-lg-8">
@@ -12,9 +11,8 @@
       <div class="header-body text-center mb-7">
         <div class="row justify-content-center">
           <div class="col-lg-5 col-md-6">
-            <h1 class="text-white">Welcome! # todo text</h1>
-            <p class="text-lead text-light">Use these awesome forms to login or create new account in your project for
-              free. #Todo text</p>
+            <h1 class="text-white">{% raw %}{% trans "Welcome Back!" %}{% endraw %}</h1>
+            <p class="text-lead text-light">{% raw %}{% trans "Please use the form below to login to your account." %}{% endraw %}</p>
           </div>
         </div>
       </div>
@@ -26,34 +24,30 @@
       </svg>
     </div>
   </div>
-
+  {% raw %}{% get_providers as socialaccount_providers %}{% endraw %}
   <div class="container mt--8 pb-5">
     <div class="row justify-content-center">
       <div class="col-lg-5 col-md-7">
         <div class="card bg-secondary shadow border-0">
+          {% raw %}{% if socialaccount_providers %}{% endraw %}
           <div class="card-header bg-transparent pb-5">
             <div class="text-muted text-center mt-2 mb-3">
-              <small>Sign in with #todo text</small>
+              <small>{% raw %}{% trans "Login with" %}{% endraw %}</small>
             </div>
-            # todo social buttons
             <div class="btn-wrapper text-center">
-
-              <a href="#" class="btn btn-neutral btn-icon">
-
-                <span class="btn-inner--icon"><img src="../assets/img/icons/common/github.svg"></span>
-                <span class="btn-inner--text">Github</span>
-              </a>
-              <a href="#" class="btn btn-neutral btn-icon">
-                <span class="btn-inner--icon"><img src="../assets/img/icons/common/google.svg"></span>
-                <span class="btn-inner--text">Google</span>
-              </a>
+              {% raw %}{% include "socialaccount/snippets/provider_list.html" with process="login" %}{% endraw %}
             </div>
           </div>
+          {% raw %}{% endif %}{% endraw %}
           <div class="card-body px-lg-5 py-lg-5">
             <div class="text-center text-muted mb-4">
-              <small>{% raw %}{% trans "Or login via email" %}{% endraw %}</small>
+              {% raw %}{% if socialaccount_providers %}{% endraw %}
+              <small>{% raw %}{% trans "or login via email" %}{% endraw %}</small>
+              {% raw %}{% else %}{% endraw %}
+              <small>{% raw %}{% trans "Login via email" %}{% endraw %}</small>
+              {% raw %}{% endif %}{% endraw %}
             </div>
-            <form role="form" id="signup_form" method="post" action="{% raw %}{% url 'account_login' %}{% endraw %}">
+            <form role="form" id="signup_form" method="post" action="{% raw %}{% url 'account_signup' %}{% endraw %}">
               {% raw %}{% if form.non_field_errors %}{% endraw %}
                   <div class="alert alert-danger" role="alert">
                     {% raw %}{% for error in form.non_field_errors %}{% endraw %}
@@ -66,41 +60,58 @@
                 <input type="hidden" name="{% raw %}{{ redirect_field_name }}{% endraw %}" value="{% raw %}{{ redirect_field_value }}{% endraw %}"/>
               {% raw %}{% endif %}{% endraw %}
               <div class="form-group mb-3">
-                <div class="input-group input-group-alternative {% raw %}{% if form.login.errors %}is-invalid{% endif %}{% endraw %}">
+                <div class="input-group input-group-alternative {% raw %}{% if form.email.errors %}is-invalid{% endif %}{% endraw %}">
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="ni ni-email-83"></i></span>
                   </div>
-                  <input name='login' class="form-control" placeholder="Email" type="email" value="{% raw %}{% if form.login.value %}{{ form.login.value }}{% endif %}{% endraw %}"
-                         id="{% raw %}{{ form.login.id_for_label }}{% endraw %}">
-
+                  <input name='email' class="form-control" placeholder="Email" type="email" value="{% raw %}{% if form.email.value %}{{ form.email.value }}{% endif %}{% endraw %}"
+                         id="{% raw %}{{ form.email.id_for_label }}{% endraw %}">
                 </div>
-                {% raw %}{% if form.login.errors %}{% endraw %}
+                {% raw %}{% if form.email.errors %}{% endraw %}
 
-                  {% raw %}{% for error in form.login.errors %}{% endraw %}
+                  {% raw %}{% for error in form.email.errors %}{% endraw %}
                     <div class="invalid-feedback">{% raw %}{{ error|escape }}{% endraw %}</div>
                   {% raw %}{% endfor %}{% endraw %}
 
                 {% raw %}{% endif %}{% endraw %}
               </div>
               <div class="form-group mb-3">
-                <div class="input-group input-group-alternative {% raw %}{% if form.password.errors %}is-invalid{% endif %}{% endraw %}">
+                <div class="input-group input-group-alternative {% raw %}{% if form.password1.errors %}is-invalid{% endif %}{% endraw %}">
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
                   </div>
-                  <input name='password' class="textinput textInput form-control" placeholder="{% raw %}{% trans "Password" %}{% endraw %}" type="password"
-                         id="{% raw %}{{ form.password.id_for_label }}{% endraw %}">
+                  <input name='password1' class="textinput textInput form-control" placeholder="{% raw %}{% trans "Password" %}{% endraw %}" type="password"
+                         id="{% raw %}{{ form.password1.id_for_label }}{% endraw %}">
 
                 </div>
-                {% raw %}{% if form.password.errors %}{% endraw %}
+                {% raw %}{% if form.password1.errors %}{% endraw %}
 
-                  {% raw %}{% for error in form.password.errors %}{% endraw %}
+                  {% raw %}{% for error in form.password1.errors %}{% endraw %}
                     <div class="invalid-feedback">{% raw %}{{ error|escape }}{% endraw %}</div>
                   {% raw %}{% endfor %}{% endraw %}
 
                 {% raw %}{% endif %}{% endraw %}
               </div>
+              <div class="form-group mb-3">
+                <div class="input-group input-group-alternative {% raw %}{% if form.password2.errors %}is-invalid{% endif %}{% endraw %}">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
+                  </div>
+                  <input name='password2' class="textinput textInput form-control" placeholder="{% raw %}{% trans "Confirm Password" %}{% endraw %}" type="password"
+                         id="{% raw %}{{ form.password2.id_for_label }}{% endraw %}">
+
+                </div>
+                {% raw %}{% if form.password2.errors %}{% endraw %}
+
+                  {% raw %}{% for error in form.password2.errors %}{% endraw %}
+                    <div class="invalid-feedback">{% raw %}{{ error|escape }}{% endraw %}</div>
+                  {% raw %}{% endfor %}{% endraw %}
+
+                {% raw %}{% endif %}{% endraw %}
+              </div>
+
               <div class="text-center">
-                <button type="submit" class="btn btn-primary my-4">{% raw %}{% trans "Login" %}{% endraw %}</button>
+                <button type="submit" class="btn btn-primary my-4">{% raw %}{% trans "Sign Up" %}{% endraw %}</button>
               </div>
 
             </form>

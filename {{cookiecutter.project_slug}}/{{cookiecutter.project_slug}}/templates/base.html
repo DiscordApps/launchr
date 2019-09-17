@@ -58,10 +58,7 @@
           <ul class="navbar-nav align-items-lg-center ml-lg-auto">
             {% raw %}{% if request.user.is_authenticated %}{% endraw %}
               <li class="nav-item d-none d-lg-block ml-lg-4">
-              <a href="{% raw %}{% url "app:dashboard" %}{% endraw %}"  class="btn btn-neutral btn-icon">
-                <span class="btn-inner--icon">
-                  <i class="fa fa-cloud-download mr-2"></i>
-                </span>
+              <a href="{% raw %}{% url "app:home" %}{% endraw %}"  class="btn btn-neutral btn-icon">
                 <span class="nav-link-inner--text">{% raw %}{% trans "Account" %}{% endraw %}</span>
               </a>
             </li>
@@ -76,9 +73,7 @@
             </li>
             <li class="nav-item d-none d-lg-block ml-lg-4">
               <a href="{% raw %}{% url 'account_signup' %}{% endraw %}"  class="btn btn-neutral btn-icon">
-                <span class="btn-inner--icon">
-                  <i class="fa fa-cloud-download mr-2"></i>
-                </span>
+
                 <span class="nav-link-inner--text">{% raw %}{% trans "Sign Up" %}{% endraw %}</span>
               </a>
             </li>

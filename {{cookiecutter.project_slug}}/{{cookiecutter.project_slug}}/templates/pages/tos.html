@@ -1,61 +1,107 @@
 {% raw %}{% extends "base.html" %}{% endraw %}
 {% raw %}{% load i18n %}{% endraw %}
-{% raw %}{% block title %}{% trans "Privacy Policy" %}{% endblock %}{% endraw %}
+{% raw %}{% block title %}{% trans "Terms of Service" %}{% endblock %}{% endraw %}
 {% raw %}{% block content %}{% endraw %}
-<div class="position-relative">
-  <!-- Hero for FREE version -->
-  <section class="section section-lg section-hero section-shaped">
-    <!-- Background circles -->
-    <div class="shape shape-style-1 shape-primary">
-      <span class="span-150"></span>
-      <span class="span-50"></span>
-      <span class="span-50"></span>
-      <span class="span-75"></span>
-      <span class="span-100"></span>
-      <span class="span-75"></span>
-      <span class="span-50"></span>
-      <span class="span-100"></span>
-      <span class="span-50"></span>
-      <span class="span-100"></span>
-    </div>
-    <div class="container shape-container d-flex align-items-center py-lg">
-      <div class="col px-0">
+<section class="section-content-cover section-shaped my-0">
+  <!-- Circles background -->
+  <div class="shape shape-style-1 shape-primary alpha-4">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+  <!-- SVG separator -->
+  <div class="separator separator-bottom separator-skew">
+    <svg x="0" y="0" viewBox="0 0 2560 100" preserveAspectRatio="none" version="1.1" xmlns="http://www.w3.org/2000/svg">
+      <polygon class="fill-white" points="2560 0 2560 100 0 100"></polygon>
+    </svg>
+  </div>
+</section>
+<section class="section">
+  <div class="container">
+    <div class="card card-profile shadow mt--300 p-5">
+      <div class="row justify-content-center">
+        <div class="col-lg-12">
 
-      <h2>{{ cookiecutter.domain_name }} Terms of Service</h2>
-<h3>1. Terms</h3>
-<p>By accessing the website at <a href="http://example.com">http://example.com</a>, you are agreeing to be bound by these terms of service, all applicable laws and regulations, and agree that you are responsible for compliance with any applicable local laws. If you do not agree with any of these terms, you are prohibited from using or accessing this site. The materials contained in this website are protected by applicable copyright and trademark law.</p>
-<h3>2. Use License</h3>
-<ol type="a">
-   <li>Permission is granted to temporarily download one copy of the materials (information or software) on {{ cookiecutter.domain_name }}'s website for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under this license you may not:
-   <ol type="i">
-       <li>modify or copy the materials;</li>
-       <li>use the materials for any commercial purpose, or for any public display (commercial or non-commercial);</li>
-       <li>attempt to decompile or reverse engineer any software contained on {{ cookiecutter.domain_name }}'s website;</li>
-       <li>remove any copyright or other proprietary notations from the materials; or</li>
-       <li>transfer the materials to another person or "mirror" the materials on any other server.</li>
-   </ol>
-    </li>
-   <li>This license shall automatically terminate if you violate any of these restrictions and may be terminated by {{ cookiecutter.domain_name }} at any time. Upon terminating your viewing of these materials or upon the termination of this license, you must destroy any downloaded materials in your possession whether in electronic or printed format.</li>
-</ol>
-<h3>3. Disclaimer</h3>
-<ol type="a">
-   <li>The materials on {{ cookiecutter.domain_name }}'s website are provided on an 'as is' basis. {{ cookiecutter.domain_name }} makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties including, without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights.</li>
-   <li>Further, {{ cookiecutter.domain_name }} does not warrant or make any representations concerning the accuracy, likely results, or reliability of the use of the materials on its website or otherwise relating to such materials or on any sites linked to this site.</li>
-</ol>
-<h3>4. Limitations</h3>
-<p>In no event shall {{ cookiecutter.domain_name }} or its suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use the materials on {{ cookiecutter.domain_name }}'s website, even if {{ cookiecutter.domain_name }} or a {{ cookiecutter.domain_name }} authorized representative has been notified orally or in writing of the possibility of such damage. Because some jurisdictions do not allow limitations on implied warranties, or limitations of liability for consequential or incidental damages, these limitations may not apply to you.</p>
-<h3>5. Accuracy of materials</h3>
-<p>The materials appearing on {{ cookiecutter.domain_name }}'s website could include technical, typographical, or photographic errors. {{ cookiecutter.domain_name }} does not warrant that any of the materials on its website are accurate, complete or current. {{ cookiecutter.domain_name }} may make changes to the materials contained on its website at any time without notice. However {{ cookiecutter.domain_name }} does not make any commitment to update the materials.</p>
-<h3>6. Links</h3>
-<p>{{ cookiecutter.domain_name }} has not reviewed all of the sites linked to its website and is not responsible for the contents of any such linked site. The inclusion of any link does not imply endorsement by {{ cookiecutter.domain_name }} of the site. Use of any such linked website is at the user's own risk.</p>
-<h3>7. Modifications</h3>
-<p>{{ cookiecutter.domain_name }} may revise these terms of service for its website at any time without notice. By using this website you are agreeing to be bound by the then current version of these terms of service.</p>
-<h3>8. Governing Law</h3>
-<p>These terms and conditions are governed by and construed in accordance with the laws of {{ cookiecutter.location }} and you irrevocably submit to the exclusive jurisdiction of the courts in that State or location.</p>
-<p>Generated by <a title="Terms of Service Template Generator" href="https://getterms.io/">GetTerms.io</a></p>
+          <div class="mb-4 mt--2"><h2>Terms of Service</h2>
 
+          {% raw %}{% comment %}#todo add your own terms here here{% endcomment %}{% endraw %}
+          <h3>1. Terms</h3>
+          <p>By accessing the website at <a href="{{ cookiecutter.domain_name }}">https://{{ cookiecutter.domain_name }}</a>, you are agreeing to be
+            bound by these terms of service, all applicable laws and regulations, and agree that you are responsible for
+            compliance with any applicable local laws. If you do not agree with any of these terms, you are prohibited
+            from using or accessing this site. The materials contained in this website are protected by applicable
+            copyright and trademark law.</p>
+          <h3>2. Use License</h3>
+          <ol type="a">
+            <li>Permission is granted to temporarily download one copy of the materials (information or software)
+              on {{ cookiecutter.domain_name }}'s website for personal, non-commercial transitory viewing only. This is
+              the grant of a license, not a transfer of title, and under this license you may not:
+              <ol type="i">
+                <li>modify or copy the materials;</li>
+                <li>use the materials for any commercial purpose, or for any public display (commercial or
+                  non-commercial);
+                </li>
+                <li>attempt to decompile or reverse engineer any software contained on {{ cookiecutter.domain_name }}'s
+                  website;
+                </li>
+                <li>remove any copyright or other proprietary notations from the materials; or</li>
+                <li>transfer the materials to another person or "mirror" the materials on any other server.</li>
+              </ol>
+            </li>
+            <li>This license shall automatically terminate if you violate any of these restrictions and may be
+              terminated by {{ cookiecutter.domain_name }} at any time. Upon terminating your viewing of these materials
+              or upon the termination of this license, you must destroy any downloaded materials in your possession
+              whether in electronic or printed format.
+            </li>
+          </ol>
+          <h3>3. Disclaimer</h3>
+          <ol type="a">
+            <li>The materials on {{ cookiecutter.domain_name }}'s website are provided on an 'as is'
+              basis. {{ cookiecutter.domain_name }} makes no warranties, expressed or implied, and hereby disclaims and
+              negates all other warranties including, without limitation, implied warranties or conditions of
+              merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other
+              violation of rights.
+            </li>
+            <li>Further, {{ cookiecutter.domain_name }} does not warrant or make any representations concerning the
+              accuracy, likely results, or reliability of the use of the materials on its website or otherwise relating
+              to such materials or on any sites linked to this site.
+            </li>
+          </ol>
+          <h3>4. Limitations</h3>
+          <p>In no event shall {{ cookiecutter.domain_name }} or its suppliers be liable for any damages (including,
+            without limitation, damages for loss of data or profit, or due to business interruption) arising out of the
+            use or inability to use the materials on {{ cookiecutter.domain_name }}'s website, even
+            if {{ cookiecutter.domain_name }} or a {{ cookiecutter.domain_name }} authorized representative has been
+            notified orally or in writing of the possibility of such damage. Because some jurisdictions do not allow
+            limitations on implied warranties, or limitations of liability for consequential or incidental damages,
+            these limitations may not apply to you.</p>
+          <h3>5. Accuracy of materials</h3>
+          <p>The materials appearing on {{ cookiecutter.domain_name }}'s website could include technical, typographical,
+            or photographic errors. {{ cookiecutter.domain_name }} does not warrant that any of the materials on its
+            website are accurate, complete or current. {{ cookiecutter.domain_name }} may make changes to the materials
+            contained on its website at any time without notice. However {{ cookiecutter.domain_name }} does not make
+            any commitment to update the materials.</p>
+          <h3>6. Links</h3>
+          <p>{{ cookiecutter.domain_name }} has not reviewed all of the sites linked to its website and is not
+            responsible for the contents of any such linked site. The inclusion of any link does not imply endorsement
+            by {{ cookiecutter.domain_name }} of the site. Use of any such linked website is at the user's own risk.</p>
+          <h3>7. Modifications</h3>
+          <p>{{ cookiecutter.domain_name }} may revise these terms of service for its website at any time without
+            notice. By using this website you are agreeing to be bound by the then current version of these terms of
+            service.</p>
+          <h3>8. Governing Law</h3>
+          <p>These terms and conditions are governed by and construed in accordance with the laws
+            of {{ cookiecutter.location }} and you irrevocably submit to the exclusive jurisdiction of the courts in
+            that State or location.</p>
+          <p>Generated by <a title="Terms of Service Template Generator" href="https://getterms.io/">GetTerms.io</a></p>
+          </div>
+        </div>
       </div>
     </div>
-  </section>
-</div>
+  </div>
+</section>
 {% raw %}{% endblock %}{% endraw %}

@@ -30,9 +30,9 @@
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
   <!-- Icons -->
-  <link href="{% raw %}{% static 'js/plugins/nucleo/css/nucleo.css' %}{% endraw %}" rel="stylesheet"/>
-  <link href="{% raw %}{% static 'js/plugins/@fortawesome/fontawesome-free/css/all.min.css' %}{% endraw %}"
-        rel="stylesheet"/>
+  <link href="{% raw %}{% static '/vendor/nucleo/css/nucleo.css' %}{% endraw %}" rel="stylesheet">
+  <link href="{% raw %}{% static '/vendor/font-awesome/css/font-awesome.min.css' %}{% endraw %}" rel="stylesheet">
+
   <!-- CSS Files -->
   <link href="{% raw %}{% static 'css/dashboard.css' %}{% endraw %}" rel="stylesheet"/>
 </head>
@@ -135,7 +135,7 @@
       <!-- Navigation -->
       <ul class="navbar-nav">
         <li class="nav-item active">
-          <a class=" nav-link active " href="{% raw %}{% url "app:dashboard" %}{% endraw %}">
+          <a class=" nav-link active " href="{% raw %}{% url "app:home" %}{% endraw %}">
             <i class="ni ni-tv-2 text-primary"></i> Dashboard
           </a>
         </li>
@@ -265,7 +265,7 @@
         <div class="row align-items-center justify-content-xl-between">
           <div class="col-xl-6">
             <div class="copyright text-center text-xl-left text-muted">
-              © 2018 <a href="https://{{ cookiecutter.domain_name }}" class="font-weight-bold ml-1" target="">{{ cookiecutter.domain_name }}</a>
+              ©  {% raw %}{% now "Y" %}{% endraw %} <a href="https://{{ cookiecutter.domain_name }}" class="font-weight-bold ml-1" target="">{{ cookiecutter.domain_name }}</a>
             </div>
           </div>
           <div class="col-xl-6">

@@ -19,8 +19,6 @@ class UserDetailView(LoginRequiredMixin, DetailView):
         return User.objects.get(username=self.request.user.username)
 
 
-user_detail_view = UserDetailView.as_view()
-
 
 class UserUpdateView(LoginRequiredMixin, UpdateView):
 
@@ -40,16 +38,3 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
         )
         return super().form_valid(form)
 
-
-user_update_view = UserUpdateView.as_view()
-
-
-class UserRedirectView(LoginRequiredMixin, RedirectView):
-
-    permanent = False
-
-    def get_redirect_url(self):
-        return reverse("app:dashboard")
-
-
-user_redirect_view = UserRedirectView.as_view()

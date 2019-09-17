@@ -1,20 +1,16 @@
 {% raw %}{% extends "app/base_blank.html" %}{% endraw %}
 
-{% raw %}{% load i18n %}{% endraw %}
-{% raw %}{% load crispy_forms_tags %}{% endraw %}
-{% raw %}{% load static %}{% endraw %}
+{% raw %}{% load i18n static crispy_forms_tags account socialaccount %}{% endraw %}
 
-{% raw %}{% block head_title %}{% trans "Sign Up" %}{% endblock %}{% endraw %}
-
+{% raw %}{% block title %}{% trans "Sign Up" %}{% endblock %}{% endraw %}
 {% raw %}{% block content %}{% endraw %}
   <div class="header bg-gradient-primary py-7 py-lg-8">
     <div class="container">
       <div class="header-body text-center mb-7">
         <div class="row justify-content-center">
           <div class="col-lg-5 col-md-6">
-            <h1 class="text-white">Welcome! # todo text</h1>
-            <p class="text-lead text-light">Use these awesome forms to login or create new account in your project for
-              free. #Todo text</p>
+            <h1 class="text-white">{% raw %}{% trans "Welcome!" %}{% endraw %}</h1>
+            <p class="text-lead text-light">{% raw %}{% trans "Please use the form below to create a new account." %}{% endraw %}</p>
           </div>
         </div>
       </div>
@@ -26,32 +22,28 @@
       </svg>
     </div>
   </div>
-
+  {% raw %}{% get_providers as socialaccount_providers %}{% endraw %}
   <div class="container mt--8 pb-5">
     <div class="row justify-content-center">
       <div class="col-lg-5 col-md-7">
         <div class="card bg-secondary shadow border-0">
+          {% raw %}{% if socialaccount_providers %}{% endraw %}
           <div class="card-header bg-transparent pb-5">
             <div class="text-muted text-center mt-2 mb-3">
-              <small>Sign in with #todo text</small>
+              <small>{% raw %}{% trans "Sign up with" %}{% endraw %}</small>
             </div>
-            # todo social buttons
             <div class="btn-wrapper text-center">
-
-              <a href="#" class="btn btn-neutral btn-icon">
-
-                <span class="btn-inner--icon"><img src="{% raw %}{% static "img/icons/common/github.svg" %}{% endraw %}></span>
-                <span class="btn-inner--text">Github</span>
-              </a>
-              <a href="#" class="btn btn-neutral btn-icon">
-                <span class="btn-inner--icon"><img src="../assets/img/icons/common/google.svg"></span>
-                <span class="btn-inner--text">Google</span>
-              </a>
+              {% raw %}{% include "socialaccount/snippets/provider_list.html" with process="login" %}{% endraw %}
             </div>
           </div>
+          {% raw %}{% endif %}{% endraw %}
           <div class="card-body px-lg-5 py-lg-5">
             <div class="text-center text-muted mb-4">
-              <small>{% raw %}{% trans "Or sign up via email" %}{% endraw %}</small>
+              {% raw %}{% if socialaccount_providers %}{% endraw %}
+              <small>{% raw %}{% trans "or sign up via email" %}{% endraw %}</small>
+              {% raw %}{% else %}{% endraw %}
+              <small>{% raw %}{% trans "Sign up via email" %}{% endraw %}</small>
+              {% raw %}{% endif %}{% endraw %}
             </div>
             <form role="form" id="signup_form" method="post" action="{% raw %}{% url 'account_signup' %}{% endraw %}">
               {% raw %}{% if form.non_field_errors %}{% endraw %}

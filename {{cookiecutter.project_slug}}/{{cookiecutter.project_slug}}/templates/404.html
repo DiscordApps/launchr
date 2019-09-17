@@ -1,9 +1,48 @@
-{% raw %}{% extends "base.html" %}
+{% raw %}{% extends "base.html" %}{% endraw %}
+{% raw %}{% load i18n %}{% endraw %}
+{% raw %}{% block title %}{% trans "Page not found (404)" %}{% endblock %}{% endraw %}
+{% raw %}{% block content %}{% endraw %}
+<section class="section-content-cover section-shaped my-0">
+  <!-- Circles background -->
+  <div class="shape shape-style-1 shape-primary alpha-4">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+  <!-- SVG separator -->
+  <div class="separator separator-bottom separator-skew">
+    <svg x="0" y="0" viewBox="0 0 2560 100" preserveAspectRatio="none" version="1.1" xmlns="http://www.w3.org/2000/svg">
+      <polygon class="fill-white" points="2560 0 2560 100 0 100"></polygon>
+    </svg>
+  </div>
+</section>
+<section class="section">
+  <div class="container">
+    <div class="card card-profile shadow mt--300 p-5">
+      <div class="row justify-content-center">
+        <div class="col-lg-12">
 
-{% block title %}Page not found{% endblock %}
+          <div class="mb-4 mt--2"><h2>{% raw %}{% trans "Page not found" %}{% endraw %}</h2>
+            <p>{% raw %}{% trans "This is not the page you were looking for." %}{% endraw %}</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% raw %}{% endblock %}{% endraw %}
 
-{% block content %}
-<h1>Page not found</h1>
-
-<p>This is not the page you were looking for.</p>
-{% endblock content %}{% endraw %}

@@ -20322,3 +20322,19 @@ html:not([dir='rtl']) .noUi-horizontal .noUi-handle
     right: 10px;
     left: auto;
 }
+
+.section-content-cover
+{
+    height: 330px;
+
+    background-position: center center;
+    background-size: cover;
+}
+
+@media (max-width: 991.98px)
+{
+    .section-content-cover
+    {
+        height: 200px;
+    }
+}

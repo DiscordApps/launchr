@@ -1,0 +1,26 @@
+{% raw %}{% load socialaccount %}{% endraw %}
+
+{% raw %}{% get_providers as socialaccount_providers %}{% endraw %}
+
+{% raw %}{% for provider in socialaccount_providers %}{% endraw %}
+{% raw %}{% if provider.id == "openid" %}{% endraw %}
+{% raw %}{% for brand in provider.get_brands %}{% endraw %}
+
+  <a title="{% raw %}{{brand.name}}{% endraw %}"
+     href="{% raw %}{% provider_login_url provider.id openid=brand.openid_url process=process %}{% endraw %}"
+     class="btn btn-neutral btn-icon socialaccount_provider {% raw %}{{provider.id}} {{brand.id}}{% endraw %}">
+
+                <span class="btn-inner--icon"><img src="{% raw %}{% endraw %}></span>
+                <span class="btn-inner--text">{% raw %}{{brand.name}}{% endraw %}</span>
+              </a>
+{% raw %}{% endfor %}{% endraw %}
+{% raw %}{% endif %}{% endraw %}
+  <a title="{% raw %}{{provider.name}}{% endraw %}"
+     href="{% raw %}{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}{% endraw %}"
+     class="btn btn-neutral btn-icon socialaccount_provider {% raw %}{{provider.id}}{% endraw %}">
+
+    <i class="fa fa-{% raw %}{{ provider.name.lower }}{% endraw %}"></i>
+                <span class="">{% raw %}{{provider.name}}{% endraw %}</span>
+              </a>
+
+{% raw %}{% endfor %}{% endraw %}
