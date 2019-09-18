@@ -64,16 +64,15 @@ SECURE_CONTENT_TYPE_NOSNIFF = env.bool(
     "DJANGO_SECURE_CONTENT_TYPE_NOSNIFF", default=True
 )
 
-{% if cookiecutter.use_whitenoise == 'y' -%}
 # STATIC
 # ------------------------
-{% endif -%}
-{% if cookiecutter.use_whitenoise == 'y' -%}
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-{% endif -%}
+STATIC_ROOT = '/data/static'
+STATIC_URL = '/static/'
 
 # MEDIA
 # ------------------------------------------------------------------------------
+MEDIA_ROOT = "/data/media"
+MEDIA_URL = '/media/'
 
 # TEMPLATES
 # ------------------------------------------------------------------------------
@@ -118,29 +117,14 @@ ANYMAIL = {
     "MAILGUN_API_URL": env("MAILGUN_API_URL", default="https://api.mailgun.net/v3"),
 }
 
-{% if cookiecutter.use_whitenoise == 'y' -%}
-# WhiteNoise
-# ------------------------------------------------------------------------------
-# http://whitenoise.evans.io/en/latest/django.html#enable-whitenoise
-MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")  # noqa F405
-
-{% endif %}
-{%- if cookiecutter.use_compressor == 'y' -%}
 # django-compressor
 # ------------------------------------------------------------------------------
 # https://django-compressor.readthedocs.io/en/latest/settings/#django.conf.settings.COMPRESS_ENABLED
 COMPRESS_ENABLED = env.bool("COMPRESS_ENABLED", default=True)
-# https://django-compressor.readthedocs.io/en/latest/settings/#django.conf.settings.COMPRESS_STORAGE
-COMPRESS_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 # https://django-compressor.readthedocs.io/en/latest/settings/#django.conf.settings.COMPRESS_URL
 COMPRESS_URL = STATIC_URL # noqa F405
-{% endif %}
-{%- if cookiecutter.use_whitenoise == 'n' -%}
-# Collectfast
-# ------------------------------------------------------------------------------
-# https://github.com/antonagestam/collectfast#installation
-INSTALLED_APPS = ["collectfast"] + INSTALLED_APPS  # noqa F405
-{% endif %}
+COMPRESS_OFFLINE = True
+
 # LOGGING
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#logging

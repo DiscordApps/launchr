@@ -15,7 +15,7 @@
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. -->
 {% endcomment %}{% endraw %}
-{% raw %}{% load static i18n %}{% endraw %}
+{% raw %}{% load static i18n compress %}{% endraw %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,7 +32,9 @@
   <link href="{% raw %}{% static '/vendor/nucleo/css/nucleo.css' %}{% endraw %}" rel="stylesheet">
   <link href="{% raw %}{% static '/vendor/font-awesome/css/font-awesome.min.css' %}{% endraw %}" rel="stylesheet">
   <!-- Argon CSS -->
+  {% raw %}{% compress css %}{% endraw %}
   <link type="text/css" href="{% raw %}{% static '/css/style.css' %}{% endraw %}" rel="stylesheet">
+  {% raw %}{% endcompress %}{% endraw %}
 </head>
 
 <body>
@@ -139,7 +141,9 @@
   <script src="{% raw %}{% static 'vendor/bootstrap/bootstrap.min.js' %}{% endraw %}"></script>
   <script src="{% raw %}{% static 'vendor/headroom/headroom.min.js' %}{% endraw %}"></script>
   <!-- Argon JS -->
+  {% raw %}{% compress js %}{% endraw %}
   <script src="{% raw %}{% static 'js/argon.js' %}{% endraw %}"></script>
+  {% raw %}{% endcompress %}{% endraw %}
 </body>
 
 </html>
