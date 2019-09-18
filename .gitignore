@@ -229,3 +229,7 @@ pip-selfcheck.json
 .pytest_cache/
 deploy.sh
 deploy.sh
+
+# production
+{{cookiecutter.project_slug}}/production.yml
+{{cookiecutter.project_slug}}/compose/production/
