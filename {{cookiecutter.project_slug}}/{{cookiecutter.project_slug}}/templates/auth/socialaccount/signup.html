@@ -1,0 +1,90 @@
+{% raw %}{% extends "app/base_blank.html" %}{% endraw %}
+
+{% raw %}{% load i18n static crispy_forms_tags account socialaccount %}{% endraw %}
+
+{% raw %}{% block title %}{% trans "Sign Up" %}{% endblock %}{% endraw %}
+{% raw %}{% block content %}{% endraw %}
+  <div class="header bg-gradient-primary py-7 py-lg-8">
+    <div class="container">
+      <div class="header-body text-center mb-7">
+        <div class="row justify-content-center">
+          <div class="col-lg-5 col-md-6">
+            <h1 class="text-white">{% raw %}{% trans "Sign Up" %}{% endraw %}</h1>
+            <p class="text-lead text-light">{% raw %}{% blocktrans with provider_name=account.get_provider.name site_name=site.name %}You are about to use your {{provider_name}} account to login to
+{{site_name}}. As a final step, please complete the following form:{% endblocktrans %}{% endraw %}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="separator separator-bottom separator-skew zindex-100">
+      <svg x="0" y="0" viewBox="0 0 2560 100" preserveAspectRatio="none" version="1.1"
+           xmlns="http://www.w3.org/2000/svg">
+        <polygon class="fill-default" points="2560 0 2560 100 0 100"></polygon>
+      </svg>
+    </div>
+  </div>
+  {% raw %}{% get_providers as socialaccount_providers %}{% endraw %}
+  <div class="container mt--8 pb-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-5 col-md-7">
+        <div class="card bg-secondary shadow border-0">
+
+          <div class="card-body px-lg-5 py-lg-5">
+
+            <form class="signup" id="signup_form" method="post" action="{% raw %}{% url 'socialaccount_signup' %}{% endraw %}">
+              {% raw %}{% if form.non_field_errors %}{% endraw %}
+                  <div class="alert alert-danger" role="alert">
+                    {% raw %}{% for error in form.non_field_errors %}{% endraw %}
+                      <div class="">{% raw %}{{ error }}{% endraw %}</div>
+                    {% raw %}{% endfor %}{% endraw %}
+                  </div>
+              {% raw %}{% endif %}{% endraw %}
+              {% raw %}{% csrf_token %}{% endraw %}
+              {% raw %}{{ form.as_p }}{% endraw %}
+              {% raw %}{% if redirect_field_value %}{% endraw %}
+              <input type="hidden" name="{% raw %}{{ redirect_field_name }}{% endraw %}" value="{% raw %}{{ redirect_field_value }}{% endraw %}" />
+              {% raw %}{% endif %}{% endraw %}
+
+              <div class="text-center">
+                <button type="submit" class="btn btn-primary my-4">{% raw %}{% trans "Sign Up" %}{% endraw %}</button>
+              </div>
+
+            </form>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-6">
+            <a href="{% raw %}{% url "account_reset_password" %}{% endraw %}" class="text-light">
+              <small>{% raw %}{% trans "Forgot password?" %}{% endraw %}</small>
+            </a>
+          </div>
+          <div class="col-6 text-right">
+            <small>{% raw %}{% trans "Have an account" %}{% endraw %}</small>
+            <a href="{% raw %}{% url "account_login" %}{% endraw %}" class="text-light">
+              <small>{% raw %}{% trans "Login" %}{% endraw %}</small>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% raw %}{% endblock %}{% endraw %}
+
+
+
+{% raw %}{% block content2 %}
+    <h1>{% trans "Sign Up" %}</h1>
+
+<p>{% blocktrans with provider_name=account.get_provider.name site_name=site.name %}You are about to use your {{provider_name}} account to login to
+{{site_name}}. As a final step, please complete the following form:{% endblocktrans %}</p>
+
+<form class="signup" id="signup_form" method="post" action="{% url 'socialaccount_signup' %}">
+  {% csrf_token %}
+  {{ form.as_p }}
+  {% if redirect_field_value %}
+  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+  {% endif %}
+  <button type="submit">{% trans "Sign Up" %} &raquo;</button>
+</form>
+
+{% endblock %}{% endraw %}

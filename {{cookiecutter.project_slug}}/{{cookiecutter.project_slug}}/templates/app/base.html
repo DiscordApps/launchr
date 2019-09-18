@@ -109,7 +109,7 @@
       <div class="navbar-collapse-header d-md-none">
         <div class="row">
           <div class="col-6 collapse-brand">
-            <a href="./index.html">
+            <a href="{% raw %}{% url "app:home" %}{% endraw %}">
               <img src="{% raw %}{% static 'img/brand/logo.png' %}{% endraw %}">
             </a>
           </div>
@@ -189,15 +189,15 @@
   <nav class="navbar navbar-top navbar-expand-md navbar-dark border-bottom" id="navbar-main">
     <div class="container-fluid">
       <!-- Brand -->
-      <a class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block" href="./index.html">Dashboard</a>
+
       <!-- Form -->
-      <form class="navbar-search navbar-search-dark form-inline mr-3 d-none d-md-flex ml-lg-auto">
+      <form class="navbar-search navbar-search-dark form-inline mr-3 d-none d-md-flex">
         <div class="form-group mb-0">
           <div class="input-group input-group-alternative">
             <div class="input-group-prepend">
               <span class="input-group-text"><i class="fas fa-search"></i></span>
             </div>
-            <input class="form-control" placeholder="Search" type="text">
+            <input class="form-control" placeholder="#todo implement search here" type="text">
           </div>
         </div>
       </form>
@@ -238,20 +238,15 @@
   {% raw %}{% block topnav %}{% endraw %}
 
   {% raw %}{% endblock %}{% endraw %}
-  {% raw %}{% block breadcrumb %}{% endraw %}
+  {% raw %}{% block header %}{% endraw %}
   <div class="header bg-primary pb-6 pt-6">
       <div class="container-fluid">
         <div class="header-body">
           <div class="row align-items-center py-4">
             <div class="col-lg-6 col-7">
-              <h6 class="h2 text-white d-inline-block mb-0">Default</h6>
-              <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
-                <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
-                  <li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
-                  <li class="breadcrumb-item"><a href="#">Dashboards</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Default</li>
-                </ol>
-              </nav>
+              {% raw %}{% block breadcrumb %}{% endraw %}
+
+              {% raw %}{% endblock %}{% endraw %}
             </div>
 
           </div>
@@ -259,7 +254,8 @@
         </div>
       </div>
     </div>
-  {% raw %}{% endblock %}{% endraw %}
+  {% raw %}{% endblock header %}{% endraw %}
+
   {% raw %}{% block content %}{% endraw %}
   {% raw %}{% endblock %}{% endraw %}
   <div class="container-fluid">

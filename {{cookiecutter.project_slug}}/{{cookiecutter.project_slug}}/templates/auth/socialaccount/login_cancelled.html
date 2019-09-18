@@ -3,7 +3,8 @@
 {% raw %}{% load i18n %}{% endraw %}
 {% raw %}{% load crispy_forms_tags %}{% endraw %}
 {% raw %}{% load static %}{% endraw %}
-{% raw %}{% block title %}{% trans "Account Inactive" %}{% endblock %}{% endraw %}
+
+{% raw %}{% block title %}{% trans "Login Cancelled" %}{% endblock %}{% endraw %}
 
 {% raw %}{% block content %}{% endraw %}
   <div class="header bg-gradient-primary py-7 py-lg-8">
@@ -11,8 +12,12 @@
       <div class="header-body text-center mb-7">
         <div class="row justify-content-center">
           <div class="col-lg-5 col-md-6">
-            <h1 class="text-white">{% raw %}{% trans "Account Inactive" %}{% endraw %}</h1>
-            <p class="text-lead text-light">{% raw %}{% trans "This account is inactive." %}{% endraw %}</p>
+            <h1 class="text-white">{% raw %}{% trans "Login Cancelled" %}{% endraw %}</h1>
+            <p class="text-lead text-light">{% raw %}{% url 'account_login' as login_url %}{% endraw %}
+
+              {% raw %}{% blocktrans %}You decided to cancel logging in using one of your existing accounts.</p>
+            <p class="text-lead text-light">If this was a mistake, please proceed to <a href="{{login_url}}" class="text-light text-underline">login</a>.{% endblocktrans %}{% endraw %}</p>
+
           </div>
         </div>
       </div>
@@ -26,16 +31,3 @@
   </div>
 
 {% raw %}{% endblock %}{% endraw %}
-
-
-
-
-
-{% raw %}{% block head_title %}{% endblock %}{% endraw %}
-
-{% raw %}{% block inner %}{% endraw %}
-<h1>{% raw %}{% endraw %}</h1>
-
-<p>{% raw %}{% endraw %}</p>
-{% raw %}{% endblock %}{% endraw %}
-

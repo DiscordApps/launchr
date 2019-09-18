@@ -1,0 +1,6 @@
+{% raw %}{% load i18n %}{% endraw %}
+{% raw %}{% load account %}{% endraw %}
+
+{% raw %}{% user_display user as user_display %}{% endraw %}
+<strong>{% raw %}{% trans "Note" %}{% endraw %}:</strong> {% raw %}{% blocktrans %}you are already logged in as {{ user_display }}.{% endblocktrans %}{% endraw %}
+

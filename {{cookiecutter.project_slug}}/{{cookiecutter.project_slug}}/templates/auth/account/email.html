@@ -1,62 +1,80 @@
-{% raw %}{% extends "account/base.html" %}{% endraw %}
+{% raw %}{% extends "app/base.html" %}{% endraw %}
+{% raw %}{% load static i18n crispy_forms_tags %}{% endraw %}
 
-{% raw %}{% load i18n %}{% endraw %}
-{% raw %}{% load crispy_forms_tags %}{% endraw %}
+{% raw %}{% block title %}{% trans "Email" %}{% endblock %}{% endraw %}
 
-{% raw %}{% block head_title %}{% trans "Account" %}{% endblock %}{% endraw %}
-
-{% raw %}{% block inner %}{% endraw %}
-<h1>{% raw %}{% trans "E-mail Addresses" %}{% endraw %}</h1>
-
-{% raw %}{% if user.emailaddress_set.all %}{% endraw %}
-<p>{% raw %}{% trans 'The following e-mail addresses are associated with your account:' %}{% endraw %}</p>
-
-<form action="{% raw %}{% url 'account_email' %}{% endraw %}" class="email_list" method="post">
-{% raw %}{% csrf_token %}{% endraw %}
-<fieldset class="blockLabels">
-
-  {% raw %}{% for emailaddress in user.emailaddress_set.all %}{% endraw %}
-<div class="radio">
-  <label for="email_radio_{% raw %}{{forloop.counter}}{% endraw %}" class="{% raw %}{% if emailaddress.primary %}primary_email{%endif%}{% endraw %}">
-
-    <input id="email_radio_{% raw %}{{forloop.counter}}{% endraw %}" type="radio" name="email" {% raw %}{% if emailaddress.primary or user.emailaddress_set.count == 1 %}{% endraw %}checked="checked"{% raw %}{%endif %}{% endraw %} value="{% raw %}{{emailaddress.email}}{% endraw %}"/>
-
-    {% raw %}{{ emailaddress.email }}{% endraw %}
-    {% raw %}{% if emailaddress.verified %}{% endraw %}
-    <span class="verified">{% raw %}{% trans "Verified" %}{% endraw %}</span>
-    {% raw %}{% else %}{% endraw %}
-    <span class="unverified">{% raw %}{% trans "Unverified" %}{% endraw %}</span>
-    {% raw %}{% endif %}{% endraw %}
-    {% raw %}{% if emailaddress.primary %}{% endraw %}<span class="primary">{% raw %}{% trans "Primary" %}{% endraw %}</span>{% raw %}{% endif %}{% endraw %}
-  </label>
-</div>
-  {% raw %}{% endfor %}{% endraw %}
-
-<div class="form-group">
-      <button class="secondaryAction btn btn-primary" type="submit" name="action_primary" >{% raw %}{% trans 'Make Primary' %}{% endraw %}</button>
-      <button class="secondaryAction btn btn-primary" type="submit" name="action_send" >{% raw %}{% trans 'Re-send Verification' %}{% endraw %}</button>
-      <button class="primaryAction btn btn-primary" type="submit" name="action_remove" >{% raw %}{% trans 'Remove' %}{% endraw %}</button>
-</div>
-
-</fieldset>
-</form>
-
-{% raw %}{% else %}{% endraw %}
-<p><strong>{% raw %}{% trans 'Warning:'%}{% endraw %}</strong> {% raw %}{% trans "You currently do not have any e-mail address set up. You should really add an e-mail address so you can receive notifications, reset your password, etc." %}{% endraw %}</p>
-
-{% raw %}{% endif %}{% endraw %}
-
-
-    <h2>{% raw %}{% trans "Add E-mail Address" %}{% endraw %}</h2>
-
-    <form method="post" action="{% raw %}{% url 'account_email' %}{% endraw %}" class="add_email">
-        {% raw %}{% csrf_token %}{% endraw %}
-        {% raw %}{{ form|crispy }}{% endraw %}
-        <button class="btn btn-primary" name="action_add" type="submit">{% raw %}{% trans "Add E-mail" %}{% endraw %}</button>
-    </form>
-
+{% raw %}{% block breadcrumb %}{% endraw %}
+<h6 class="h2 text-white d-inline-block mb-0">{% raw %}{% trans "Email" %}{% endraw %}</h6>
 {% raw %}{% endblock %}{% endraw %}
 
+{% raw %}{% block content %}{% endraw %}
+<div class="container-fluid mt--6">
+  <!-- Table -->
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <h3 class="mb-0">{% raw %}{% trans "E-mail Addresses" %}{% endraw %}</h3>
+        </div>
+        <div class="card-body">
+          <div class="row w-100">
+            <p><strong># todo: this page needs some serious rework</strong></p>
+
+            {% raw %}{% if user.emailaddress_set.all %}{% endraw %}
+            <p>{% raw %}{% trans 'The following e-mail addresses are associated with your account:' %}{% endraw %}</p>
+
+            <form action="{% raw %}{% url 'account_email' %}{% endraw %}" class="email_list" method="post">
+            {% raw %}{% csrf_token %}{% endraw %}
+            <fieldset class="blockLabels">
+
+              {% raw %}{% for emailaddress in user.emailaddress_set.all %}{% endraw %}
+            <div class="radio">
+              <label for="email_radio_{% raw %}{{forloop.counter}}{% endraw %}" class="{% raw %}{% if emailaddress.primary %}primary_email{%endif%}{% endraw %}">
+
+                <input id="email_radio_{% raw %}{{forloop.counter}}{% endraw %}" type="radio" name="email" {% raw %}{% if emailaddress.primary or user.emailaddress_set.count == 1 %}{% endraw %}checked="checked"{% raw %}{%endif %}{% endraw %} value="{% raw %}{{emailaddress.email}}{% endraw %}"/>
+
+                {% raw %}{{ emailaddress.email }}{% endraw %}
+                {% raw %}{% if emailaddress.verified %}{% endraw %}
+                <span class="verified">{% raw %}{% trans "Verified" %}{% endraw %}</span>
+                {% raw %}{% else %}{% endraw %}
+                <span class="unverified">{% raw %}{% trans "Unverified" %}{% endraw %}</span>
+                {% raw %}{% endif %}{% endraw %}
+                {% raw %}{% if emailaddress.primary %}{% endraw %}<span class="primary">{% raw %}{% trans "Primary" %}{% endraw %}</span>{% raw %}{% endif %}{% endraw %}
+              </label>
+            </div>
+              {% raw %}{% endfor %}{% endraw %}
+
+            <div class="form-group">
+                  <button class="secondaryAction btn btn-primary" type="submit" name="action_primary" >{% raw %}{% trans 'Make Primary' %}{% endraw %}</button>
+                  <button class="secondaryAction btn btn-primary" type="submit" name="action_send" >{% raw %}{% trans 'Re-send Verification' %}{% endraw %}</button>
+                  <button class="primaryAction btn btn-primary" type="submit" name="action_remove" >{% raw %}{% trans 'Remove' %}{% endraw %}</button>
+            </div>
+
+            </fieldset>
+            </form>
+
+            {% raw %}{% else %}{% endraw %}
+            <p><strong>{% raw %}{% trans 'Warning:'%}{% endraw %}</strong> {% raw %}{% trans "You currently do not have any e-mail address set up. You should really add an e-mail address so you can receive notifications, reset your password, etc." %}{% endraw %}</p>
+
+            {% raw %}{% endif %}{% endraw %}
+
+
+            <h2>{% raw %}{% trans "Add E-mail Address" %}{% endraw %}</h2>
+
+            <form method="post" action="{% raw %}{% url 'account_email' %}{% endraw %}" class="add_email">
+                {% raw %}{% csrf_token %}{% endraw %}
+                {% raw %}{{ form|crispy }}{% endraw %}
+                <button class="btn btn-primary" name="action_add" type="submit">{% raw %}{% trans "Add E-mail" %}{% endraw %}</button>
+            </form>
+
+          </div>
+          <!-- End Action buttons -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% raw %}{% endblock content %}{% endraw %}
 
 {% raw %}{% block javascript %}{% endraw %}
 {% raw %}{{ block.super }}{% endraw %}

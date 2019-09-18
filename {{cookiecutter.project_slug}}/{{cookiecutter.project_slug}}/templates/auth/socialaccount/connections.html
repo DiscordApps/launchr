@@ -1,0 +1,74 @@
+{% raw %}{% extends "app/base.html" %}{% endraw %}
+{% raw %}{% load static i18n crispy_forms_tags %}{% endraw %}
+
+{% raw %}{% block title %}{% trans "Account Connections" %}{% endblock %}{% endraw %}
+
+{% raw %}{% block breadcrumb %}{% endraw %}
+<h6 class="h2 text-white d-inline-block mb-0">{% raw %}{% trans "Account Connections" %}{% endraw %}</h6>
+{% raw %}{% endblock %}{% endraw %}
+
+{% raw %}{% block content %}{% endraw %}
+<div class="container-fluid mt--6">
+  <!-- Table -->
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <h3 class="mb-0">{% raw %}{% trans "Account Connections" %}{% endraw %}</h3>
+        </div>
+        <div class="card-body">
+          <div class="row w-100">
+            <p><strong># todo: this page needs some serious rework</strong></p>
+
+<h1>{% raw %}{% trans "Account Connections" %}{% endraw %}</h1>
+
+{% raw %}{% if form.accounts %}{% endraw %}
+<p>{% raw %}{% blocktrans %}You can sign in to your account using any of the following third party accounts:{% endblocktrans %}{% endraw %}</p>
+
+
+<form method="post" action="{% raw %}{% url 'socialaccount_connections' %}{% endraw %}">
+{% raw %}{% csrf_token %}{% endraw %}
+
+<fieldset>
+{% raw %}{% if form.non_field_errors %}{% endraw %}
+<div id="errorMsg">{% raw %}{{ form.non_field_errors }}{% endraw %}</div>
+{% raw %}{% endif %}{% endraw %}
+
+{% raw %}{% for base_account in form.accounts %}{% endraw %}
+{% raw %}{% with base_account.get_provider_account as account %}{% endraw %}
+<div>
+<label for="id_account_{% raw %}{{ base_account.id }}{% endraw %}">
+<input id="id_account_{% raw %}{{ base_account.id }}{% endraw %}" type="radio" name="account" value="{% raw %}{{ base_account.id }}{% endraw %}"/>
+<span class="socialaccount_provider {% raw %}{{ base_account.provider }} {{ account.get_brand.id }}{% endraw %}">{% raw %}{{account.get_brand.name}}{% endraw %}</span>
+{% raw %}{{ account }}{% endraw %}
+</label>
+</div>
+{% raw %}{% endwith %}{% endraw %}
+{% raw %}{% endfor %}{% endraw %}
+
+<div>
+<button type="submit">{% raw %}{% trans 'Remove' %}{% endraw %}</button>
+</div>
+
+</fieldset>
+
+</form>
+
+{% raw %}{% else %}{% endraw %}
+<p>{% raw %}{% trans 'You currently have no social network accounts connected to this account.' %}{% endraw %}</p>
+{% raw %}{% endif %}{% endraw %}
+
+<h2>{% raw %}{% trans 'Add a 3rd Party Account' %}{% endraw %}</h2>
+
+<ul class="socialaccount_providers">
+{% raw %}{% include "socialaccount/snippets/provider_list.html" with process="connect" %}{% endraw %}
+</ul>
+
+{% raw %}{% include "socialaccount/snippets/login_extra.html" %}{% endraw %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% raw %}{% endblock %}{% endraw %}
