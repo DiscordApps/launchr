@@ -46,7 +46,8 @@
               <small>{% raw %}{% trans "Login via email" %}{% endraw %}</small>
               {% raw %}{% endif %}{% endraw %}
             </div>
-            <form role="form" id="signup_form" method="post" action="{% raw %}{% url 'account_signup' %}{% endraw %}">
+            <form role="form" id="signup_form" method="post" action="{% raw %}{% url 'account_login' %}{% endraw %}">
+
               {% raw %}{% if form.non_field_errors %}{% endraw %}
                   <div class="alert alert-danger" role="alert">
                     {% raw %}{% for error in form.non_field_errors %}{% endraw %}
@@ -63,46 +64,29 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="ni ni-email-83"></i></span>
                   </div>
-                  <input name='email' class="form-control" placeholder="Email" type="email" value="{% raw %}{% if form.email.value %}{{ form.email.value }}{% endif %}{% endraw %}"
-                         id="{% raw %}{{ form.email.id_for_label }}{% endraw %}">
+                  <input name='login' class="form-control" placeholder="Email" type="email" value="{% raw %}{% if form.login.value %}{{ form.login.value }}{% endif %}{% endraw %}"
+                         id="{% raw %}{{ form.login.id_for_label }}{% endraw %}">
                 </div>
-                {% raw %}{% if form.email.errors %}{% endraw %}
+                {% raw %}{% if form.login.errors %}{% endraw %}
 
-                  {% raw %}{% for error in form.email.errors %}{% endraw %}
+                  {% raw %}{% for error in form.login.errors %}{% endraw %}
                     <div class="invalid-feedback">{% raw %}{{ error|escape }}{% endraw %}</div>
                   {% raw %}{% endfor %}{% endraw %}
 
                 {% raw %}{% endif %}{% endraw %}
               </div>
               <div class="form-group mb-3">
-                <div class="input-group input-group-alternative {% raw %}{% if form.password1.errors %}is-invalid{% endif %}{% endraw %}">
+                <div class="input-group input-group-alternative {% raw %}{% if form.password.errors %}is-invalid{% endif %}{% endraw %}">
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
                   </div>
-                  <input name='password1' class="textinput textInput form-control" placeholder="{% raw %}{% trans "Password" %}{% endraw %}" type="password"
-                         id="{% raw %}{{ form.password1.id_for_label }}{% endraw %}">
+                  <input name='password' class="textinput textInput form-control" placeholder="{% raw %}{% trans "Password" %}{% endraw %}" type="password"
+                         id="{% raw %}{{ form.password.id_for_label }}{% endraw %}">
 
                 </div>
-                {% raw %}{% if form.password1.errors %}{% endraw %}
+                {% raw %}{% if form.password.errors %}{% endraw %}
 
-                  {% raw %}{% for error in form.password1.errors %}{% endraw %}
-                    <div class="invalid-feedback">{% raw %}{{ error|escape }}{% endraw %}</div>
-                  {% raw %}{% endfor %}{% endraw %}
-
-                {% raw %}{% endif %}{% endraw %}
-              </div>
-              <div class="form-group mb-3">
-                <div class="input-group input-group-alternative {% raw %}{% if form.password2.errors %}is-invalid{% endif %}{% endraw %}">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
-                  </div>
-                  <input name='password2' class="textinput textInput form-control" placeholder="{% raw %}{% trans "Confirm Password" %}{% endraw %}" type="password"
-                         id="{% raw %}{{ form.password2.id_for_label }}{% endraw %}">
-
-                </div>
-                {% raw %}{% if form.password2.errors %}{% endraw %}
-
-                  {% raw %}{% for error in form.password2.errors %}{% endraw %}
+                  {% raw %}{% for error in form.password.errors %}{% endraw %}
                     <div class="invalid-feedback">{% raw %}{{ error|escape }}{% endraw %}</div>
                   {% raw %}{% endfor %}{% endraw %}
 
@@ -110,7 +94,7 @@
               </div>
 
               <div class="text-center">
-                <button type="submit" class="btn btn-primary my-4">{% raw %}{% trans "Sign Up" %}{% endraw %}</button>
+                <button type="submit" class="btn btn-primary my-4">{% raw %}{% trans "Login" %}{% endraw %}</button>
               </div>
 
             </form>
