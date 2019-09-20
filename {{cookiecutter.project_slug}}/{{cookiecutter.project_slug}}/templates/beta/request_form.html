@@ -1,0 +1,107 @@
+{% raw %}{% extends "app/base_blank.html" %}{% endraw %}
+
+{% raw %}{% load i18n %}{% endraw %}
+{% raw %}{% load crispy_forms_tags socialaccount static %}{% endraw %}
+{% raw %}{% block title %}{% trans "Request Invite" %}{% endblock %}{% endraw %}
+
+{% raw %}{% block content %}{% endraw %}
+<div class="header bg-gradient-primary py-7 py-lg-8">
+    <div class="container">
+      <div class="header-body text-center mb-7">
+        <div class="row justify-content-center">
+          <div class="col-lg-5 col-md-6">
+            <h1 class="text-white">{% raw %}{% trans "Request Invite" %}{% endraw %}</h1>
+            <p class="text-lead text-light">{% raw %}{% trans "We are currently in private beta." %}{% endraw %}</p>
+              <p class="text-lead text-light">{% raw %}{% trans "Fill out the form below to request an invite." %}{% endraw %}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="separator separator-bottom separator-skew zindex-100">
+      <svg x="0" y="0" viewBox="0 0 2560 100" preserveAspectRatio="none" version="1.1"
+           xmlns="http://www.w3.org/2000/svg">
+        <polygon class="fill-default" points="2560 0 2560 100 0 100"></polygon>
+      </svg>
+    </div>
+  </div>
+
+  <div class="container mt--8 pb-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-5 col-md-7">
+        <div class="card bg-secondary shadow border-0">
+
+          <div class="card-body px-lg-5 py-lg-5">
+            
+            <form role="form" id="signup_form" method="post" action="">
+
+              {% raw %}{% if form.non_field_errors %}{% endraw %}
+                  <div class="alert alert-danger" role="alert">
+                    {% raw %}{% for error in form.non_field_errors %}{% endraw %}
+                      <div class="">{% raw %}{{ error }}{% endraw %}</div>
+                    {% raw %}{% endfor %}{% endraw %}
+                  </div>
+              {% raw %}{% endif %}{% endraw %}
+              {% raw %}{% csrf_token %}{% endraw %}
+              
+              <div class="form-group mb-3">
+                <div class="input-group input-group-alternative {% raw %}{% if form.email.errors %}is-invalid{% endif %}{% endraw %}">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="ni ni-email-83"></i></span>
+                  </div>
+                  <input name='email' class="form-control" placeholder="Email" type="email" value="{% raw %}{% if form.email.value %}{{ form.email.value }}{% endif %}{% endraw %}"
+                         id="{% raw %}{{ form.email.id_for_label }}{% endraw %}">
+                </div>
+                {% raw %}{% if form.email.errors %}{% endraw %}
+
+                  {% raw %}{% for error in form.email.errors %}{% endraw %}
+                    <div class="invalid-feedback">{% raw %}{{ error|escape }}{% endraw %}</div>
+                  {% raw %}{% endfor %}{% endraw %}
+
+                {% raw %}{% endif %}{% endraw %}
+              </div>
+
+
+              <div class="text-center">
+                <button type="submit" class="btn btn-primary my-4">{% raw %}{% trans "Request Invite" %}{% endraw %}</button>
+              </div>
+
+            </form>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-6">
+            <a href="{% raw %}{% url "account_reset_password" %}{% endraw %}" class="text-light">
+              <small>{% raw %}{% trans "Forgot password?" %}{% endraw %}</small>
+            </a>
+          </div>
+          <div class="col-6 text-right">
+            <a href="{% raw %}{% url "account_signup" %}{% endraw %}" class="text-light">
+              <small>{% raw %}{% trans "Create new account" %}{% endraw %}</small>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% raw %}{% endblock %}{% endraw %}
+
+---
+
+
+{% raw %}
+{% load i18n crispy_forms_tags %}
+
+
+{% block content2 %}
+  <div class="row">
+    <div class="col-md-4 col-md-offset-4 col-sm-10 col-sm-offset-1">
+      <div class="heading">
+        <h1 class="text-center">Request Invite</h1>
+      </div>
+
+      <p class="text-center">We are currently in private beta. Fill out the form below to request an invite.</p>
+      {% crispy form %}
+    </div>
+  </div>
+{% endblock %}{% endraw %}
+
