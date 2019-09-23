@@ -4,6 +4,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.views.generic import TemplateView
 from django.views import defaults as default_views
+from {{cookiecutter.project_slug}}.payments.views import PricingView
 
 urlpatterns = [
     path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
@@ -11,7 +12,7 @@ urlpatterns = [
         "about/", TemplateView.as_view(template_name="pages/about.html"), name="about"
     ),
     path(
-        "pricing/", TemplateView.as_view(template_name="pages/pricing.html"), name="pricing"
+        "pricing/", PricingView.as_view(), name="pricing"
     ),
     path(
         "tos/", TemplateView.as_view(template_name="pages/tos.html"), name="tos"
@@ -23,6 +24,10 @@ urlpatterns = [
     path(settings.ADMIN_URL, admin.site.urls),
     path("app/", include("{{ cookiecutter.project_slug }}.app.urls", namespace="app")),
     path("auth/", include("allauth.urls")),
+    path("payments/", include("{{ cookiecutter.project_slug }}.payments.urls", namespace="payments")),
+    {% if cookiecutter.private_beta == "y" %}
+    path("beta/", include("{{ cookiecutter.project_slug }}.beta.urls", namespace="beta")),
+    {% endif %}
     # Your stuff: custom urls includes go here
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
