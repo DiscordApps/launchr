@@ -15368,6 +15368,10 @@ button.section-darker:focus
     {
         margin-top: -300px !important;
     }
+    .mt--600
+    {
+        margin-top: -600px !important;
+    }
     .mb--300
     {
         margin-bottom: -300px !important;
@@ -20326,7 +20330,13 @@ html:not([dir='rtl']) .noUi-horizontal .noUi-handle
 .section-content-cover
 {
     height: 330px;
+    background-position: center center;
+    background-size: cover;
+}
 
+.section-content-pricing
+{
+    height: 700px;
     background-position: center center;
     background-size: cover;
 }

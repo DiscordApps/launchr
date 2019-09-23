@@ -1,0 +1,183 @@
+{% raw %}{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Pricing" %}{% endblock %}
+
+{% block content %}
+<section class="section-content-pricing section-shaped mb-200">
+      <!-- Circles background -->
+      <div class="shape shape-style-1 shape-primary alpha-4">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <!-- SVG separator -->
+      <div class="separator separator-bottom separator-skew">
+        <svg x="0" y="0" viewBox="0 0 2560 100" preserveAspectRatio="none" version="1.1" xmlns="http://www.w3.org/2000/svg">
+          <polygon class="fill-white" points="2560 0 2560 100 0 100"></polygon>
+        </svg>
+      </div>
+    </section>
+<section class="section section-lg pt-lg-0 mt--600">
+  <div class="container mb-5">
+        <div class="header-body text-center mb-5 mt-5">
+          <div class="row justify-content-center">
+            <div class="col-xl-5 col-lg-6 col-md-8 px-5 mb-5">
+              <h3 class="text-white">{% trans "Choose the best plan for you" %}</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+  <div class="container mt--6 pb-5">
+      <div class="row justify-content-center">
+        <div class="col-lg-12">
+          <div class="pricing card-group flex-column flex-md-row mb-3">
+            {% for plan in plans %}
+            <div class="card card-pricing bg-gradient-secondary border-1 text-center mb-4">
+              <div class="card-header bg-transparent">
+                <h4 class="text-uppercase ls-1 text-primary py-3 mb-0">{{ plan.name }}</h4>
+              </div>
+              <div class="card-body px-lg-7">
+                <div class="display-2">{% if plan.price == "free" %}<span class="text-success">{% trans "free" %}</span>{% else %}{{ plan.price }}{% endif %}</div>
+                <span class="text-muted">{% if plan.price == "free" %}&nbsp;{% else %}{% trans "per month" %}{% endif %}</span>
+
+                <ul class="list-unstyled my-4">
+                  {% for feature in plan.features %}
+                  <li>
+                    <div class="d-flex align-items-center">
+
+                      <div>
+                        <div class="icon icon-sm icon-shape bg-gradient-success shadow rounded-circle text-white mb-2">
+                          <i class="fa fa-check"></i>
+                        </div>
+                      </div>
+                      <div class="pb-2">
+                        <span class="pl-3">{{ feature }}</span>
+                      </div>
+
+                    </div>
+                  </li>
+                  {% endfor %}
+
+                </ul>
+
+              </div>
+              {% if plan.subscribable %}
+              <div class="card-footer bg-transparent">
+                {% if request.user.is_authenticated %}
+                    {% if request.user.has_subscription %}
+                        {% if request.user.has_cancelled_subscription %}
+                          {% if request.user.plan.plan_id == plan.plan_id %}
+                              <form method="post" action="{% url "payments:change_plan" %}">
+                                  {% csrf_token %}
+                                  <input type="hidden" name="plan_id" value="{{ plan.plan_id }}">
+                                  <input type="submit" class="btn btn-success" value="{% trans "Resubscribe" %}">
+                              </form>
+                          {% else %}
+                              <form method="post" action="{% url "payments:change_plan" %}">
+                                  {% csrf_token %}
+                                  <input type="hidden" name="plan_id" value="{{ plan.plan_id }}">
+                                  <input type="submit" class="btn btn-success" value="{% trans "Change Plan" %}">
+                              </form>
+                          {% endif %}
+                        {% endif %}
+                        {% if request.user.has_active_subscription %}
+                          {% if request.user.plan.plan_id == plan.plan_id %}
+                              Your current plan
+                          {% else %}
+                              <form method="post" action="{% url "payments:change_plan" %}">
+                                  {% csrf_token %}
+                                  <input type="hidden" name="plan_id" value="{{ plan.plan_id }}">
+                                  <input type="submit" class="btn btn-success" value="{% trans "Change Plan" %}">
+                              </form>
+                          {% endif %}
+                        {% endif %}
+                    {% else %}
+                    <a href="#!"
+                       data-product="{{ plan.plan_id }}"
+                       data-theme="none"
+                       data-success="{% url "app:home" %}"
+                       data-passthrough="{{ request.user.uuid }}"
+                       data-email="{{ request.user.email }}"
+                       class="btn btn-success paddle_button"
+                       >Subscribe</a>
+                    {% endif %}
+                {% else %}
+                    <a href="{% url "account_signup" %}?next={% url "pricing" %}" data-product="570966" class="btn btn-warning mt-4 paddle_button">Subscribe</a>
+                {% endif %}
+              </div>
+              {% endif %}
+
+            </div>
+            {% endfor %}
+            {% comment %}
+            <div class="card card-pricing bg-gradient-success zoom-in shadow-lg rounded border-0 text-center mb-4">
+              <div class="card-header bg-transparent">
+                <h4 class="text-uppercase ls-1 text-white py-3 mb-0">Alpha pack</h4>
+              </div>
+              <div class="card-body px-lg-7">
+                <div class="display-1 text-white">$199</div>
+                <span class="text-white">per application</span>
+                <ul class="list-unstyled my-4">
+                  <li>
+                    <div class="d-flex align-items-center">
+                      <div>
+                        <span class="pl-2 text-white">Complete documentation</span>
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="d-flex align-items-center">
+                      <div>
+                        <div class="icon icon-xs icon-shape bg-white shadow rounded-circle text-muted">
+                          <i class="fas fa-pen-fancy"></i>
+                        </div>
+                      </div>
+                      <div>
+                        <span class="pl-2 text-white">Working materials in Sketch</span>
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="d-flex align-items-center">
+                      <div>
+                        <div class="icon icon-xs icon-shape bg-white shadow rounded-circle text-muted">
+                          <i class="fas fa-hdd"></i>
+                        </div>
+                      </div>
+                      <div>
+                        <span class="pl-2 text-white">2GB cloud storage</span>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+                <button type="button" class="btn btn-secondary mb-3">Start free trial</button>
+              </div>
+
+            </div>
+            {% endcomment %}
+          </div>
+        </div>
+      </div>
+
+    </div>
+</section>
+{% endblock %}
+
+{% block javascript %}
+{% if USE_PADDLE and request.user.is_authenticated %}
+<script src="https://cdn.paddle.com/paddle/paddle.js"></script>
+<script type="text/javascript">
+	Paddle.Setup({
+    vendor: {{ PADDLE_VENDOR_ID }},
+	});
+</script>
+{% endif %}
+{% endblock javascript %}
+{% endraw %}

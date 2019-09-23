@@ -37,6 +37,11 @@
   {% raw %}{% compress css %}{% endraw %}
   <link href="{% raw %}{% static 'css/dashboard.css' %}{% endraw %}" rel="stylesheet"/>
   {% raw %}{% endcompress %}{% endraw %}
+  {% raw %}{% if messages %}{% endraw %}
+  {% raw %}{% compress css %}{% endraw %}
+  <link type="text/css" href="{% raw %}{% static 'css/toastr.min.css' %}{% endraw %}" rel="stylesheet">
+  {% raw %}{% endcompress %}{% endraw %}
+  {% raw %}{% endif %}{% endraw %}
 </head>
 
 <body class="{% raw %}{% block body_class %}{% endblock %}{% endraw %}">
@@ -189,18 +194,19 @@
   <nav class="navbar navbar-top navbar-expand-md navbar-dark border-bottom" id="navbar-main">
     <div class="container-fluid">
       <!-- Brand -->
+      <div class="text-white">
+        <strong>Plan: </strong>{% raw %}{{ request.user.plan.name }}{% endraw %}
+        {% raw %}{% if request.user.has_active_subscription %}{% endraw %}
+        <span class="text-success">{% raw %}{% trans "active" %}{% endraw %}</span>
+        <strong>Next billing date: </strong>{% raw %}{{ request.user.next_billing_date }}{% endraw %}
+        <a href="#!" class="paddle_button" data-override="{% raw %}{{ request.user.get_cancel_url }}{% endraw %}">cancel</a>
+        <a href="#!" class="paddle_button" data-override="{% raw %}{{ request.user.get_payment_update_url }}{% endraw %}">update</a>
+        {% raw %}{% elif request.user.has_cancelled_subscription %}{% endraw %}
+        <span class="text-warning">{% raw %}{% trans "cancelled" %}{% endraw %}</span>
+        <strong>Cancel date: </strong>{% raw %}{{ request.user.cancellation_effective_date }}{% endraw %}
+        {% raw %}{% endif %}{% endraw %}
+      </div>
 
-      <!-- Form -->
-      <form class="navbar-search navbar-search-dark form-inline mr-3 d-none d-md-flex">
-        <div class="form-group mb-0">
-          <div class="input-group input-group-alternative">
-            <div class="input-group-prepend">
-              <span class="input-group-text"><i class="fas fa-search"></i></span>
-            </div>
-            <input class="form-control" placeholder="#todo implement search here" type="text">
-          </div>
-        </div>
-      </form>
       <!-- User -->
       <ul class="navbar-nav align-items-center d-none d-md-flex">
         <li class="nav-item dropdown">
@@ -290,6 +296,40 @@
 {% raw %}{% compress js %}{% endraw %}
 <script src="{% raw %}{% static 'js/argon-dashboard.min.js' %}{% endraw %}"></script>
 {% raw %}{% endcompress %}{% endraw %}
+{% raw %}{% block javascript %}{% endblock %}{% endraw %}
+{% raw %}{% if messages %}{% endraw %}
+    <script src="{% raw %}{% static 'js/toastr.min.js' %}{% endraw %}"></script>
+    <script type="text/javascript">
+      $(document).ready(function () {
+        {% raw %}{% for message in messages %}{% endraw %}
+          setTimeout(function () {
+            toastr.options = {
+              closeButton: true,
+              progressBar: true,
+              showMethod: 'slideDown',
+              timeOut: 8000
+            };
+            {% raw %}{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}{% endraw %}
+              toastr.error('{% raw %}{{ message }}{% endraw %}', 'Error');
+            {% raw %}{% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}{% endraw %}
+              toastr.warning('{% raw %}{{ message }}{% endraw %}', 'Warning');
+            {% raw %}{% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}{% endraw %}
+              toastr.success('{% raw %}{{ message }}{% endraw %}', 'Success');
+            {% raw %}{% elif message.level == DEFAULT_MESSAGE_LEVELS.INFO %}{% endraw %}
+              toastr.info('{% raw %}{{ message }}{% endraw %}', 'Info');
+            {% raw %}{% endif %}{% endraw %}
+
+          }, 1300);
+        {% raw %}{% endfor %}{% endraw %}
+      });
+    </script>
+  {% raw %}{% endif %}{% endraw %}
+  {% raw %}{% if request.user.is_paddle_customer %}{% endraw %}
+  <script src="https://cdn.paddle.com/paddle/paddle.js"></script>
+  <script type="text/javascript">
+	  Paddle.Setup();
+  </script>
+  {% raw %}{% endif %}{% endraw %}
 </body>
 
 </html>

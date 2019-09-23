@@ -35,6 +35,11 @@
   {% raw %}{% compress css %}{% endraw %}
   <link type="text/css" href="{% raw %}{% static '/css/style.css' %}{% endraw %}" rel="stylesheet">
   {% raw %}{% endcompress %}{% endraw %}
+  {% raw %}{% if messages %}{% endraw %}
+  {% raw %}{% compress css %}{% endraw %}
+  <link type="text/css" href="{% raw %}{% static 'css/toastr.min.css' %}{% endraw %}" rel="stylesheet">
+  {% raw %}{% endcompress %}{% endraw %}
+  {% raw %}{% endif %}{% endraw %}
 </head>
 
 <body>
@@ -144,6 +149,40 @@
   {% raw %}{% compress js %}{% endraw %}
   <script src="{% raw %}{% static 'js/argon.js' %}{% endraw %}"></script>
   {% raw %}{% endcompress %}{% endraw %}
+
+  {% raw %}{% block javascript %}{% endblock %}{% endraw %}
+
+  {% raw %}{% if messages %}{% endraw %}
+    <script src="{% raw %}{% static 'js/toastr.min.js' %}{% endraw %}"></script>
+    <script type="text/javascript">
+
+
+      $(document).ready(function () {
+        {% raw %}{% for message in messages %}{% endraw %}
+
+
+          setTimeout(function () {
+            toastr.options = {
+              closeButton: true,
+              progressBar: true,
+              showMethod: 'slideDown',
+              timeOut: 4000
+            };
+            {% raw %}{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}{% endraw %}
+              toastr.error('{% raw %}{{ message }}{% endraw %}', 'Error');
+            {% raw %}{% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}{% endraw %}
+              toastr.warning('{% raw %}{{ message }}{% endraw %}', 'Warning');
+            {% raw %}{% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}{% endraw %}
+              toastr.success('{% raw %}{{ message }}{% endraw %}', 'Success');
+            {% raw %}{% elif message.level == DEFAULT_MESSAGE_LEVELS.INFO %}{% endraw %}
+              toastr.info('{% raw %}{{ message }}{% endraw %}', 'Info');
+            {% raw %}{% endif %}{% endraw %}
+
+          }, 1300);
+        {% raw %}{% endfor %}{% endraw %}
+      });
+    </script>
+  {% raw %}{% endif %}{% endraw %}
 </body>
 
 </html>
