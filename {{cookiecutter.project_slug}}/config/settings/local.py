@@ -12,7 +12,7 @@ SECRET_KEY = env(
     default="!!!SET DJANGO_SECRET_KEY!!!",
 )
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]
+ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1", "*.ngrok.io"]
 
 # CACHES
 # ------------------------------------------------------------------------------
@@ -56,6 +56,12 @@ INSTALLED_APPS += ["django_extensions"]  # noqa F405
 # ------------------------------------------------------------------------------
 # http://docs.celeryproject.org/en/latest/userguide/configuration.html#task-eager-propagates
 CELERY_TASK_EAGER_PROPAGATES = True
+
+# Stripe
+PINAX_STRIPE_PUBLIC_KEY = env("STRIPE_PUBLIC_KEY", default="")
+PINAX_STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY", default="")
+
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = "http"
 
 # Your stuff...
 # ------------------------------------------------------------------------------

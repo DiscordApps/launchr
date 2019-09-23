@@ -3,6 +3,7 @@ Base settings to build other settings files upon.
 """
 
 import environ
+from datetime import timedelta
 
 ROOT_DIR = (
     environ.Path(__file__) - 3
@@ -75,6 +76,10 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     "{{ cookiecutter.project_slug }}.users.apps.UsersConfig",
     "{{ cookiecutter.project_slug }}.app.apps.AppConfig",
+    "{{ cookiecutter.project_slug }}.payments.apps.PaymentsConfig",
+    {% if cookiecutter.private_beta == "y" %}
+    '{{ cookiecutter.project_slug }}.beta.apps.BetaConfig',
+    {% endif %}
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -289,6 +294,86 @@ SOCIALACCOUNT_EMAIL_VERIFICATION = False
 # https://django-compressor.readthedocs.io/en/latest/quickstart/#installation
 INSTALLED_APPS += ["compressor"]
 STATICFILES_FINDERS += ["compressor.finders.CompressorFinder"]
+
+# SAAS CONFIGURATION
+# -------------------------------------------------------------------------------------------------
+# This email reveives info mails once a new account is created, or a user requests an invite to
+# the site (if in private beta mode).
+SAAS_INFO_MAIL = "{{ cookiecutter.email }}"
+
+{% if cookiecutter.private_beta == 'y' %}
+# Setting `SAAS_PRIVATE_BETA` to True sets the page in private beta mode:
+# - The default user registration is blocked
+# - Users interested in the private beta can request an invite
+# - Invites are managed through the admin interface
+# - Only users with an invite can create a new account
+SAAS_PRIVATE_BETA = True
+{% endif %}
+
+# The `SAAS_SUBSCRIPTION_TYPE` sets the default plan for new users. Allowed values are:
+# - freemium: The user is subscribed to a free plan that never expires.
+# - trial: The user is subscribed to a trial plan that expires after `SAAS_TRIAL_LENGTH` which
+#          defaults to 14 days.
+# - None: The user is not subscribed to any plan and has to subscribe to a paid plan.
+SAAS_SUBSCRIPTION_TYPE = "{{ cookiecutter.free_subscription_type }}"
+{% if cookiecutter.free_subscription_type == 'trial' %}
+# This sets the length of the trial for each new user. Use a timedelta.
+SAAS_TRIAL_LENGTH = timedelta(days=14)
+{% endif %}
+
+SAAS_PLANS = [
+    {
+        "name": "free",
+        "price": "free",
+        "default": True,
+        "display": True,
+        "subscribable": False,
+        "plan_id": None,
+        "description": "Free Plan Description",
+        "features": [
+            "Awesome Feature 1",
+        ]
+    },
+    {
+        "name": "Starter",
+        "price": "19€",
+        "default": False,
+        "display": True,
+        "subscribable": True,
+        "plan_id": "starter_plan_id",
+        "description": "Starter Plan Description",
+        "features": [
+            "Awesome Feature 1",
+            "Awesome Feature 2",
+            "Awesome Feature 3",
+
+        ]
+    },
+    {
+        "name": "Pro",
+        "price": "49€",
+        "default": False,
+        "display": True,
+        "subscribable": True,
+        "plan_id": "pro_plan_id",
+        "description": "Pro Plan Description",
+        "features": [
+            "Awesome Feature 1",
+            "Awesome Feature 2",
+            "Awesome Feature 3",
+            "Awesome Feature 4",
+            "Awesome Feature 5",
+        ]
+    }
+
+]
+
+USE_PADDLE = True
+if USE_PADDLE:
+    PADDLE_VENDOR_ID = env.str("PADDLE_VENDOR_ID")
+    PADDLE_AUTH_CODE = env.str("PADDLE_AUTH_CODE")
+    PADDLE_PUBLIC_KEY = env.str("PADDLE_PUBLIC_KEY")
+
 
 # Your stuff...
 # ------------------------------------------------------------------------------
