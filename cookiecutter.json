@@ -11,5 +11,7 @@
   "use_compressor": "n",
   "use_sentry": "n",
   "use_whitenoise": "n",
-  "use_travisci": "n"
+  "use_travisci": "n",
+  "private_beta": "n",
+  "free_subscription_type": ["freemium", "trial", "None"]
 }
