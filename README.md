@@ -27,10 +27,9 @@ Launchr is at a very early stage. If you want to try it out, follow the examples
 Install [Docker](https://docs.docker.com/install/) and [Docker Compose](https://docs.docker.com/compose/install/).
 
 ### Installing
-Generate a new project by running
+Generate a new project in your current working directory by running
 ```
-pip install cookiecutter
-cookiecutter https://github.com/jayfk/launchr
+docker run --rm -it -v ${PWD}:/out jayfk/launchr
 ```
 
 Start up the stack with
