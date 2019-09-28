@@ -19,14 +19,10 @@ MAILGUN_DOMAIN=!!!SET MAILGUN_DOMAIN!!!
 # django-allauth
 # ------------------------------------------------------------------------------
 DJANGO_ACCOUNT_ALLOW_REGISTRATION=True
-{% if cookiecutter.use_compressor == 'y' %}
 # django-compressor
 # ------------------------------------------------------------------------------
 COMPRESS_ENABLED=True
-{% endif %}
-# Gunicorn
-# ------------------------------------------------------------------------------
-WEB_CONCURRENCY=4
+
 {% if cookiecutter.use_sentry == 'y' %}
 # Sentry
 # ------------------------------------------------------------------------------

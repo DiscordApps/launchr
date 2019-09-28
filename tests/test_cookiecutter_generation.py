@@ -12,7 +12,6 @@ PATTERN = r"{{(\s?cookiecutter)[.](.*?)}}"
 RE_OBJ = re.compile(PATTERN)
 
 YN_CHOICES = ["y", "n"]
-CLOUD_CHOICES = ["AWS", "GCE", "None"]
 
 
 @pytest.fixture
@@ -22,7 +21,6 @@ def context():
         "project_slug": "my_test_project",
         "author_name": "Test Author",
         "email": "test@example.com",
-        "description": "A short description of the project.",
         "domain_name": "example.com",
         "version": "0.1.0",
         "timezone": "UTC",
@@ -30,22 +28,13 @@ def context():
 
 
 @pytest_fixture_plus
-@pytest.mark.parametrize("windows", YN_CHOICES, ids=lambda yn: f"win:{yn}")
 @pytest.mark.parametrize("use_sentry", YN_CHOICES, ids=lambda yn: f"sentry:{yn}")
-@pytest.mark.parametrize("use_compressor", YN_CHOICES, ids=lambda yn: f"cmpr:{yn}")
-@pytest.mark.parametrize("use_whitenoise", YN_CHOICES, ids=lambda yn: f"wnoise:{yn}")
 def context_combination(
-    windows,
     use_sentry,
-    use_compressor,
-    use_whitenoise,
 ):
     """Fixture that parametrize the function where it's used."""
     return {
-        "windows": windows,
-        "use_compressor": use_compressor,
         "use_sentry": use_sentry,
-        "use_whitenoise": use_whitenoise,
     }
 
 
@@ -118,22 +107,6 @@ def test_black_passes(cookies, context_combination):
         sh.black("--check", "--diff", "--exclude", "migrations", f"{result.project}/")
     except sh.ErrorReturnCode as e:
         pytest.fail(e)
-
-
-def test_travis_invokes_pytest(cookies, context):
-    context.update({"use_travisci": "y"})
-    result = cookies.bake(extra_context=context)
-
-    assert result.exit_code == 0
-    assert result.exception is None
-    assert result.project.basename == context["project_slug"]
-    assert result.project.isdir()
-
-    with open(f"{result.project}/.travis.yml", "r") as travis_yml:
-        try:
-            assert yaml.load(travis_yml)["script"] == ["pytest"]
-        except yaml.YAMLError as e:
-            pytest.fail(e)
 
 
 @pytest.mark.parametrize("slug", ["project slug", "Project_Slug"])

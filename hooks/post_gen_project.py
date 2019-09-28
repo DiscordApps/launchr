@@ -246,9 +246,6 @@ def main():
     append_to_gitignore_file(".envs/*")
     append_to_gitignore_file("!.envs/.local/")
 
-    if "{{ cookiecutter.use_travisci }}".lower() == "n":
-        remove_dottravisyml_file()
-
     print(SUCCESS + "Project initialized, keep up the good work!" + TERMINATOR)
 
 

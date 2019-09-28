@@ -1,17 +1,12 @@
 {
-  "project_name": "My Awesome Project",
+  "project_name": "Launchr Project",
   "project_slug": "{{ cookiecutter.project_name.lower()|replace(' ', '_')|replace('-', '_')|replace('.', '_')|trim() }}",
-  "description": "Behold My Awesome Project!",
-  "author_name": "Daniel Roy Greenfeld",
-  "domain_name": "example.com",
+  "author_name": "",
+  "domain_name": "domain.com",
   "email": "{{ cookiecutter.author_name.lower()|replace(' ', '-') }}@example.com",
   "location": "United States of America",
   "timezone": "UTC",
-  "windows": "n",
-  "use_compressor": "n",
-  "use_sentry": "n",
-  "use_whitenoise": "n",
-  "use_travisci": "n",
   "private_beta": "n",
+  "use_sentry": "y",
   "free_subscription_type": ["freemium", "trial", "None"]
 }
