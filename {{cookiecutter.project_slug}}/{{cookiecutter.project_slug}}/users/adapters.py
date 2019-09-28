@@ -5,7 +5,7 @@ from django.shortcuts import redirect
 from allauth.exceptions import ImmediateHttpResponse
 from django.urls import reverse
 
-{% if cookiecutter.private_beta == 'y' %}
+{% if cookiecutter.private_beta == 'y' -%}
 from {{cookiecutter.project_slug}}.beta.models import Invite
 from {{cookiecutter.project_slug}}.beta.forms import InviteForm
 
@@ -18,7 +18,7 @@ def check_invite(request):
     raise ImmediateHttpResponse(
         response=redirect(reverse("beta:request-invite"))
     )
-{% endif %}
+{%- endif %}
 
 class AccountAdapter(DefaultAccountAdapter):
     def is_open_for_signup(self, request):

@@ -7,6 +7,7 @@ from django.urls import reverse
 from {{ cookiecutter.project_slug }}.beta.models import Request
 from {{ cookiecutter.project_slug }}.beta.forms import RequestForm
 
+
 class RequestInviteView(CreateView):
     model = Request
     form_class = RequestForm

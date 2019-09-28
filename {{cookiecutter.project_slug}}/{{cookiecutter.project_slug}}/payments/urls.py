@@ -1,4 +1,4 @@
-from django.urls import include, path
+from django.urls import path
 
 from {{ cookiecutter.project_slug }}.payments.views import (
     PaddleWebhookView, ChangePlanView
