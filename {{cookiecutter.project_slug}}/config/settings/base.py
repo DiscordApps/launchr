@@ -3,7 +3,9 @@ Base settings to build other settings files upon.
 """
 
 import environ
+{% if cookiecutter.free_subscription_type == 'trial' -%}
 from datetime import timedelta
+{% endif %}
 
 ROOT_DIR = (
     environ.Path(__file__) - 3
@@ -77,9 +79,9 @@ LOCAL_APPS = [
     "{{ cookiecutter.project_slug }}.users.apps.UsersConfig",
     "{{ cookiecutter.project_slug }}.app.apps.AppConfig",
     "{{ cookiecutter.project_slug }}.payments.apps.PaymentsConfig",
-    {% if cookiecutter.private_beta == "y" %}
+    {% if cookiecutter.private_beta == "y" -%}
     '{{ cookiecutter.project_slug }}.beta.apps.BetaConfig',
-    {% endif %}
+    {% endif -%}
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -301,14 +303,14 @@ STATICFILES_FINDERS += ["compressor.finders.CompressorFinder"]
 # the site (if in private beta mode).
 SAAS_INFO_MAIL = "{{ cookiecutter.email }}"
 
-{% if cookiecutter.private_beta == 'y' %}
+{% if cookiecutter.private_beta == 'y' -%}
 # Setting `SAAS_PRIVATE_BETA` to True sets the page in private beta mode:
 # - The default user registration is blocked
 # - Users interested in the private beta can request an invite
 # - Invites are managed through the admin interface
 # - Only users with an invite can create a new account
 SAAS_PRIVATE_BETA = True
-{% endif %}
+{% endif -%}
 
 # The `SAAS_SUBSCRIPTION_TYPE` sets the default plan for new users. Allowed values are:
 # - freemium: The user is subscribed to a free plan that never expires.
@@ -316,10 +318,10 @@ SAAS_PRIVATE_BETA = True
 #          defaults to 14 days.
 # - None: The user is not subscribed to any plan and has to subscribe to a paid plan.
 SAAS_SUBSCRIPTION_TYPE = "{{ cookiecutter.free_subscription_type }}"
-{% if cookiecutter.free_subscription_type == 'trial' %}
+{% if cookiecutter.free_subscription_type == 'trial' -%}
 # This sets the length of the trial for each new user. Use a timedelta.
 SAAS_TRIAL_LENGTH = timedelta(days=14)
-{% endif %}
+{%- endif %}
 
 SAAS_PLANS = [
     {

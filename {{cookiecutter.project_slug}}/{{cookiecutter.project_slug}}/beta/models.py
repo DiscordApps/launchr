@@ -4,6 +4,7 @@ from django.db import models
 from django.utils.crypto import get_random_string
 from django.utils.encoding import python_2_unicode_compatible
 
+
 def get_code():
     return get_random_string(50)
 

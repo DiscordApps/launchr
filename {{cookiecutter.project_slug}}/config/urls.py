@@ -25,9 +25,9 @@ urlpatterns = [
     path("app/", include("{{ cookiecutter.project_slug }}.app.urls", namespace="app")),
     path("auth/", include("allauth.urls")),
     path("payments/", include("{{ cookiecutter.project_slug }}.payments.urls", namespace="payments")),
-    {% if cookiecutter.private_beta == "y" %}
+    {% if cookiecutter.private_beta == "y" -%}
     path("beta/", include("{{ cookiecutter.project_slug }}.beta.urls", namespace="beta")),
-    {% endif %}
+    {% endif -%}
     # Your stuff: custom urls includes go here
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

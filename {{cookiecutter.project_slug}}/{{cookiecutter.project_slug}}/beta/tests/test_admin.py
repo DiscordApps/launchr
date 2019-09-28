@@ -4,6 +4,7 @@ from unittest.mock import patch, Mock
 from {{ cookiecutter.project_slug }}.beta.models import Invite, Request
 from {{ cookiecutter.project_slug }}.beta.admin import send_invite, cancel_invite
 
+
 class SendInviteTestCase(TestCase):
 
     @patch("{{ cookiecutter.project_slug }}.beta.admin.send_mail")

@@ -28,12 +28,15 @@ def send_invite(modeladmin, request, queryset):
                 from_email=getattr(settings, "DEFAULT_FROM_EMAIL"),
                 recipient_list=[r.email]
             )
+
+
 send_invite.short_description = "Send Invite"
 
 
 def cancel_invite(modeladmin, request, queryset):
     for r in queryset:
         Invite.objects.filter(request=r).delete()
+
 
 cancel_invite.short_description = "Cancel Invite"
 
@@ -45,4 +48,3 @@ class RequestAdmin(admin.ModelAdmin):
 
 admin.site.register(Invite)
 admin.site.register(Request, RequestAdmin)
-

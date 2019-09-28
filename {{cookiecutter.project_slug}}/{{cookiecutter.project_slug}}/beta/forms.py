@@ -4,6 +4,7 @@ from django import forms
 
 from {{ cookiecutter.project_slug }}.beta.models import Request
 
+
 class InviteForm(forms.Form):
 
     code = forms.CharField(max_length=50, min_length=50)

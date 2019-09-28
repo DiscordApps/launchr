@@ -3,6 +3,7 @@ from test_plus.test import TestCase
 from {{ cookiecutter.project_slug }}.beta.forms import InviteForm, RequestForm
 from {{ cookiecutter.project_slug }}.beta.models import Request
 
+
 class InviteFormTestCase(TestCase):
 
     def test_form_valid(self):
