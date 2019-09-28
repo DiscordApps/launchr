@@ -3,6 +3,13 @@
 # it is meant to be run from the root directory of the repository, eg:
 # sh tests/test_docker.sh
 
+export LAUNCHR_POSTGRES_USER="postgresuser-test"
+export LAUNCHR_CELERY_FLOWER_USER="floweruser-test"
+export LAUNCHR_CELERY_FLOWER_PASSWORD="celeryflowerpassword-test"
+export LAUNCHR_POSTGRES_PASSWORD="postgrespassword-test"
+export LAUNCHR_DJANGO_ADMIN_URL="adminurl-test"
+export LAUNCHR_DJANGO_SECRET_KEY="secretkey-test"
+
 set -o errexit
 
 # install test requirements
@@ -13,14 +20,16 @@ mkdir -p .cache/docker
 cd .cache/docker
 
 # create the project using the default settings in cookiecutter.json
-cookiecutter ../../ --no-input --overwrite-if-exists $@
-cd my_awesome_project
+cookiecutter ../../ --no-input --overwrite-if-exists project_name=launchr_docker_test $@
+cd launchr_docker_test
+
+docker-compose -f local.yml build
 
 # run the project's type checks
-docker-compose -f local.yml run django mypy my_awesome_project
+docker-compose -f local.yml run django mypy launchr_docker_test
 
 # Run black with --check option
-docker-compose -f local.yml run django black --check --diff  --exclude 'migrations' ./
+#docker-compose -f local.yml run django black --check --diff  --exclude 'migrations' ./
 
 # run the project's tests
 docker-compose -f local.yml run django pytest

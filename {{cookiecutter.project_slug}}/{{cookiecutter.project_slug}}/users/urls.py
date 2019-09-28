@@ -5,5 +5,5 @@ from {{ cookiecutter.project_slug }}.users.views import UserDetailView, UserUpda
 app_name = "users"
 urlpatterns = [
     path("~update/", view=UserUpdateView.as_view(), name="update"),
-    path("/", view=UserDetailView.as_view(), name="detail"),
+    path("", view=UserDetailView.as_view(), name="detail"),
 ]

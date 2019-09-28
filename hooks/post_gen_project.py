@@ -213,18 +213,8 @@ def set_flags_in_settings_files():
     set_django_secret_key(os.path.join("config", "settings", "test.py"))
 
 
-def remove_envs_and_associated_files():
-    shutil.rmtree(".envs")
-    os.remove("merge_production_dotenvs_in_dotenv.py")
-
-
-def remove_celery_compose_dirs():
-    shutil.rmtree(os.path.join("compose", "local", "django", "celery"))
-    shutil.rmtree(os.path.join("compose", "production", "django", "celery"))
-
-
-def remove_node_dockerfile():
-    shutil.rmtree(os.path.join("compose", "local", "node"))
+def remove_beta_dirs():
+    shutil.rmtree(os.path.join("{{ cookiecutter.project_slug }}", "beta"))
 
 
 def main():
@@ -246,8 +236,10 @@ def main():
     append_to_gitignore_file(".envs/*")
     append_to_gitignore_file("!.envs/.local/")
 
-    print(SUCCESS + "Project initialized, keep up the good work!" + TERMINATOR)
+    if "{{ cookiecutter.private_beta }}".lower() == "n":
+        remove_beta_dirs()
 
+    print(SUCCESS + "Project initialized, keep up the good work!" + TERMINATOR)
 
 if __name__ == "__main__":
     main()

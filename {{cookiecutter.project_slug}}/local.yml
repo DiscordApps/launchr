@@ -12,6 +12,7 @@ services:
     image: {{ cookiecutter.project_slug }}_local_django
     depends_on:
       - postgres
+      - redis
     volumes:
       - .:/app
     env_file:

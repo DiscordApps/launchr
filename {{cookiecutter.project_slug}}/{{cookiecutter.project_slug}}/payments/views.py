@@ -74,7 +74,7 @@ class PaddleWebhookView(UpdateView):
 
         # verify the data
         key = RSA.importKey(public_key_der)
-        digest = SHA.new()
+        digest = SHA.new() # type: ignore
         digest.update(serialized_data)
         verifier = pkcs1_15.new(key)
         signature = base64.b64decode(signature)
@@ -132,31 +132,6 @@ class PaddleWebhookView(UpdateView):
     ]
 
     def subscription_created(self):
-        print(self.payload)
-        print(self.user)
-        print("SUBSCRIPTION CREATED")
-        """
-        {
-            'alert_id': ['123'], 
-            'alert_name': ['subscription_created'], 
-            'cancel_url': ['https://checkout.paddle.com/subscription/cancel?[redacted]'],
-            'checkout_id': ['2e004acc-ddd8-11e9-8a34-2a2ae2dbcce4'], 
-            'currency': ['EUR'], 
-            'email': ['user@email.com'],
-            'event_time': ['2019-09-20 09:03:46'], 
-            'marketing_consent': ['0'], 
-            'next_bill_date': ['2019-10-20'],
-            'passthrough': ['09d0931d-9ed9-467a-8009-23214548faa4'], 
-            'quantity': ['1'], 
-            'status': ['active'],
-            'subscription_id': ['456'], 
-            'subscription_plan_id': ['789'], 
-            'unit_price': ['19.00'], 
-            'update_url': ['https://checkout.paddle.com/subscription/update?[redacted]'],
-            'user_id': ['0123'], 
-            'p_signature': ['[redacted]']
-        }
-        """
         # set vendor params
         self.user.vendor = self.user.VENDORS.PADDLE
         self.user.vendor_user_id = self.payload['user_id']
@@ -177,38 +152,6 @@ class PaddleWebhookView(UpdateView):
         self.user.save()
 
     def subscription_updated(self):
-        print(self.payload)
-        print(self.user)
-        print("SUBSCRIPTION UPDATED")
-        """
-        {
-            'alert_id': ['123'], 
-            'alert_name': ['subscription_updated'], 
-            'cancel_url': ['https://checkout.paddle.com/subscription/cancel?[redacted]'],
-            'checkout_id': ['d0e62a28-ddd7-11e9-8a34-2a2ae2dbcce4'], 
-            'currency': ['EUR'], 
-            'email': ['user@email.com'],
-            'event_time': ['2019-09-21 10:24:19'], 
-            'marketing_consent': ['0'], 
-            'new_price': ['49'],
-            'new_quantity': ['1'], 
-            'new_unit_price': ['49'], 
-            'next_bill_date': ['2019-10-21'],
-            'old_next_bill_date': ['2019-10-21'], 
-            'old_price': ['19'], 
-            'old_quantity': ['1'], 
-            'old_status': ['active'],
-            'old_subscription_plan_id': ['456'], 
-            'old_unit_price': ['19'],
-            'passthrough': ['09d0931d-9ed9-467a-8009-23214548faa4'], 
-            'status': ['active'],
-            'subscription_id': ['789'], 
-            'subscription_plan_id': ['012'], 
-            'update_url': ['https://checkout.paddle.com/subscription/update?[redacted]'],
-            'user_id': ['345'], 
-            'p_signature': ['redacted']
-        }
-        """
         # set vendor params
         self.user.vendor = self.user.VENDORS.PADDLE
         self.user.vendor_user_id = self.payload['user_id']
@@ -229,29 +172,6 @@ class PaddleWebhookView(UpdateView):
         self.user.save()
 
     def subscription_cancelled(self):
-        print(self.payload)
-        print(self.user)
-        print("SUBSCRIPTION CANCELLED")
-        """
-        {
-            'alert_id': ['123'], 
-            'alert_name': ['subscription_cancelled'],
-            'cancellation_effective_date': ['2019-10-21'], 
-            'checkout_id': ['b37784f0-ddd7-11e9-8a34-2a2ae2dbcce4'],
-            'currency': ['EUR'], 
-            'email': ['user@email.com'], 
-            'event_time': ['2019-09-21 12:40:42'],
-            'marketing_consent': ['0'], 
-            'passthrough': ['09d0931d-9ed9-467a-8009-23214548faa4'], 
-            'quantity': ['1'],
-            'status': ['deleted'], 
-            'subscription_id': ['456'], 
-            'subscription_plan_id': ['789'],
-            'unit_price': ['19.00'], 
-            'user_id': ['012'], 
-            'p_signature': ['[redacted]']
-        }
-        """
         # set vendor params
         self.user.vendor = self.user.VENDORS.PADDLE
         self.user.vendor_user_id = self.payload['user_id']
@@ -268,6 +188,7 @@ class PaddleWebhookView(UpdateView):
         self.user.plan_id = self.user.vendor_plan_id
         self.user.is_customer = True
         self.user.save()
+
 
 def update_paddle_plan(user, plan_id):
     plan = plan_by_id(plan_id)
@@ -289,21 +210,6 @@ def update_paddle_plan(user, plan_id):
         url="https://vendors.paddle.com/api/2.0/subscription/users/update",
         data=payload
     )
-    """
-    {
-        'success': True, 
-        'response': {
-            'subscription_id': 1999843, 
-            'user_id': 1856132, 
-            'plan_id': 570975, 
-            'next_payment': {
-                'amount': 79, 
-                'currency': 'EUR', 
-                'date': '2019-10-21'
-            }
-        }
-    }
-    """
     if not r.status_code == 200:
         logger.error(
             "There was an error changing a users plan",
@@ -316,8 +222,8 @@ def update_paddle_plan(user, plan_id):
     if not data['success']:
         logger.error(
             "There was an error changing a users plan",
-                extra={"request": r, "data": data, "user": user}
-            )
+            extra={"request": r, "data": data, "user": user}
+        )
         return False
 
     user.vendor_subscription_id = data['response']['subscription_id']
@@ -333,20 +239,25 @@ def update_paddle_plan(user, plan_id):
     return True
 
 
-
-# todo: needs to be authed
 class ChangePlanView(LoginRequiredMixin, FormView):
 
     form_class = ChangePlanForm
 
     def form_valid(self, form):
         if not update_paddle_plan(self.request.user, form.cleaned_data["plan_id"]):
-            messages.add_message(self.request, messages.ERROR,
-                                 'There was an error changing your plan. Please try again or contact support.')
+            messages.add_message(
+                self.request,
+                messages.ERROR,
+                'There was an error changing your plan. Please try again or contact support.'
+            )
             return HttpResponseRedirect(reverse("pricing"))
         messages.add_message(self.request, messages.SUCCESS, 'Successfully changed plan')
         return HttpResponseRedirect(reverse("app:home"))
 
     def form_invalid(self, form):
-        messages.add_message(self.request, messages.ERROR, 'There was an error changing your plan. Please try again or contact support.')
+        messages.add_message(
+            self.request,
+            messages.ERROR,
+            'There was an error changing your plan. Please try again or contact support.'
+        )
         return HttpResponseRedirect(self.request.build_absolute_uri())

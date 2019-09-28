@@ -12,7 +12,7 @@ PATTERN = r"{{(\s?cookiecutter)[.](.*?)}}"
 RE_OBJ = re.compile(PATTERN)
 
 YN_CHOICES = ["y", "n"]
-
+SUBSCRIPTION_TYPE_CHOICES = ["freemium", "trial", "None"]
 
 @pytest.fixture
 def context():
@@ -29,12 +29,18 @@ def context():
 
 @pytest_fixture_plus
 @pytest.mark.parametrize("use_sentry", YN_CHOICES, ids=lambda yn: f"sentry:{yn}")
+@pytest.mark.parametrize("private_beta", YN_CHOICES, ids=lambda yn: f"private_beta:{yn}")
+@pytest.mark.parametrize("free_subscription_type", SUBSCRIPTION_TYPE_CHOICES, ids=lambda stc: f"free_subscription_type:{stc}")
 def context_combination(
     use_sentry,
+    private_beta,
+    free_subscription_type
 ):
     """Fixture that parametrize the function where it's used."""
     return {
         "use_sentry": use_sentry,
+        "private_beta": private_beta,
+        "free_subscription_type": free_subscription_type
     }
 
 
