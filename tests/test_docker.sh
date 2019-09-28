@@ -32,7 +32,9 @@ docker-compose -f local.yml run django mypy launchr_docker_test
 #docker-compose -f local.yml run django black --check --diff  --exclude 'migrations' ./
 
 # run the project's tests
-docker-compose -f local.yml run django pytest
+docker-compose -f local.yml run django pytest --cov --cov-report xml
+cp coverage.xml ../../../coverage.xml
+cp .coverage ../../../.coverage
 
 # return non-zero status code if there are migrations that have not been created
 docker-compose -f local.yml run django python manage.py makemigrations --dry-run --check || { echo "ERROR: there were changes in the models, but migration listed above have not been created and are not saved in version control"; exit 1; }

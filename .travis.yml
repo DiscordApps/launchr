@@ -21,6 +21,10 @@ matrix:
 install:
   - pip install tox
 
+after_success:
+  - pip install codecov
+  - codecov
+
 notifications:
   email:
     on_success: change
