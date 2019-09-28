@@ -33,6 +33,8 @@ docker-compose -f local.yml run django mypy launchr_docker_test
 
 # run the project's tests
 docker-compose -f local.yml run django pytest --cov --cov-report xml
+sed -i.bak "s;launchr_docker_test/;{{cookiecutter.project_slug}}/{{cookiecutter.project_slug}}/;g" coverage.xml
+sed -i.bak "s;launchr_docker_test/;{{cookiecutter.project_slug}}/{{cookiecutter.project_slug}}/;g" .coverage
 cp coverage.xml ../../../coverage.xml
 cp .coverage ../../../.coverage
 
