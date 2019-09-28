@@ -2,7 +2,6 @@
 from test_plus.test import TestCase
 
 from django.test.client import Client
-from django.urls import reverse
 
 
 class PaddleTestCase(TestCase):
@@ -107,16 +106,3 @@ class UserTestCase(TestCase):
         self.user = self.make_user()
         self.other_user = self.make_user(username="other_user")
         self.client = Client()
-
-
-class PricingViewTestCase(TestCase):
-
-    url = "pricing"
-
-    def test_has_title(self):
-        resp = self.client.get(reverse(self.url))
-        #self.assertContains(resp, "<title>Pricing</title>")
-
-    def test_context_data(self):
-        resp = self.client.get(reverse(self.url))
-        #self.assertTrue("plans" in resp.context_data)

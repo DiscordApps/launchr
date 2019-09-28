@@ -30,7 +30,7 @@ def send_invite(modeladmin, request, queryset):
             )
 
 
-send_invite.short_description = "Send Invite" # type: ignore
+send_invite.short_description = "Send Invite"  # type: ignore
 
 
 def cancel_invite(modeladmin, request, queryset):
@@ -38,7 +38,7 @@ def cancel_invite(modeladmin, request, queryset):
         Invite.objects.filter(request=r).delete()
 
 
-cancel_invite.short_description = "Cancel Invite" # type: ignore
+cancel_invite.short_description = "Cancel Invite"  # type: ignore
 
 
 class RequestAdmin(admin.ModelAdmin):
