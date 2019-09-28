@@ -8,6 +8,7 @@
 <div align="center">
 
   [![Status](https://img.shields.io/badge/status-active-success.svg)]() 
+  [![codecov](https://codecov.io/gh/jayfk/launchr/branch/master/graph/badge.svg)](https://codecov.io/gh/jayfk/launchr)
   [![GitHub Issues](https://img.shields.io/github/issues/jayfk/launchr.svg)](https://github.com/kylelobo/The-Documentation-Compendium/issues)
   [![GitHub Pull Requests](https://img.shields.io/github/issues-pr/jayfk/launchr.svg)](https://github.com/kylelobo/The-Documentation-Compendium/pulls)
   [![License](https://img.shields.io/badge/license-MIT-blue.svg)](/LICENSE)
