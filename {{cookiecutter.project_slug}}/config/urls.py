@@ -28,6 +28,7 @@ urlpatterns = [
     {% if cookiecutter.private_beta == "y" -%}
     path("beta/", include("{{ cookiecutter.project_slug }}.beta.urls", namespace="beta")),
     {% endif -%}
+    path('robots.txt', TemplateView.as_view(template_name="robots.txt", content_type='text/plain')),
     # Your stuff: custom urls includes go here
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
