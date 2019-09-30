@@ -1,53 +1,53 @@
-{% raw %}{% extends "app/base.html" %}{% endraw %}
+{% raw %}{% extends "app/account_base.html" %}{% endraw %}
 {% raw %}{% load static i18n crispy_forms_tags %}{% endraw %}
 
 {% raw %}{% block title %}{% trans "Email" %}{% endblock %}{% endraw %}
 
 {% raw %}{% block breadcrumb %}{% endraw %}
-<h6 class="h2 text-white d-inline-block mb-0">{% raw %}{% trans "Email" %}{% endraw %}</h6>
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% raw %}{% url "app:home" %}{% endraw %}"><i class="ni ni-app"></i></a></li>
+    <li class="breadcrumb-item"><a href="{% raw %}{% url "app:users:detail" %}{% endraw %}">{% raw %}{% trans "Account" %}{% endraw %}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{% raw %}{% trans "E-mail Addresses" %}{% endraw %}</li>
+  </ol>
+</nav>
 {% raw %}{% endblock %}{% endraw %}
 
-{% raw %}{% block content %}{% endraw %}
-<div class="container-fluid mt--6">
-  <!-- Table -->
-  <div class="row">
-    <div class="col">
-      <div class="card shadow">
+{% raw %}{% block account_content %}{% endraw %}
+<div class="col-xl-8 pb-4">
+      <div class="card bg-secondary shadow">
         <div class="card-header bg-transparent">
           <h3 class="mb-0">{% raw %}{% trans "E-mail Addresses" %}{% endraw %}</h3>
         </div>
         <div class="card-body">
-          <div class="row w-100">
-            <p><strong># todo: this page needs some serious rework</strong></p>
 
             {% raw %}{% if user.emailaddress_set.all %}{% endraw %}
-            <p>{% raw %}{% trans 'The following e-mail addresses are associated with your account:' %}{% endraw %}</p>
-
+            <h6 class="heading-small text-muted mb-4">{% raw %}{% trans 'The following e-mail addresses are associated with your account:' %}{% endraw %}</h6>
+            <div class="pl-4">
+            <div class="row">
             <form action="{% raw %}{% url 'account_email' %}{% endraw %}" class="email_list" method="post">
             {% raw %}{% csrf_token %}{% endraw %}
             <fieldset class="blockLabels">
 
               {% raw %}{% for emailaddress in user.emailaddress_set.all %}{% endraw %}
-            <div class="radio">
-              <label for="email_radio_{% raw %}{{forloop.counter}}{% endraw %}" class="{% raw %}{% if emailaddress.primary %}primary_email{%endif%}{% endraw %}">
-
-                <input id="email_radio_{% raw %}{{forloop.counter}}{% endraw %}" type="radio" name="email" {% raw %}{% if emailaddress.primary or user.emailaddress_set.count == 1 %}{% endraw %}checked="checked"{% raw %}{%endif %}{% endraw %} value="{% raw %}{{emailaddress.email}}{% endraw %}"/>
-
+            <div class="custom-control custom-radio mb-2">
+              <input class="custom-control-input" id="email_radio_{% raw %}{{forloop.counter}}{% endraw %}" type="radio" name="email" {% raw %}{% if emailaddress.primary or user.emailaddress_set.count == 1 %}{% endraw %}checked="checked"{% raw %}{%endif %}{% endraw %} value="{% raw %}{{emailaddress.email}}{% endraw %}"/>
+              <label class="custom-control-label" for="email_radio_{% raw %}{{forloop.counter}}{% endraw %}" class="{% raw %}{% if emailaddress.primary %}primary_email{%endif%}{% endraw %}">
                 {% raw %}{{ emailaddress.email }}{% endraw %}
                 {% raw %}{% if emailaddress.verified %}{% endraw %}
-                <span class="verified">{% raw %}{% trans "Verified" %}{% endraw %}</span>
+                <span class="badge badge-success">{% raw %}{% trans "Verified" %}{% endraw %}</span>
                 {% raw %}{% else %}{% endraw %}
-                <span class="unverified">{% raw %}{% trans "Unverified" %}{% endraw %}</span>
+                <span class="badge badge-dark">{% raw %}{% trans "Unverified" %}{% endraw %}</span>
                 {% raw %}{% endif %}{% endraw %}
-                {% raw %}{% if emailaddress.primary %}{% endraw %}<span class="primary">{% raw %}{% trans "Primary" %}{% endraw %}</span>{% raw %}{% endif %}{% endraw %}
+                {% raw %}{% if emailaddress.primary %}{% endraw %}<span class="badge badge-default">{% raw %}{% trans "Primary" %}{% endraw %}</span>{% raw %}{% endif %}{% endraw %}
               </label>
             </div>
               {% raw %}{% endfor %}{% endraw %}
 
-            <div class="form-group">
+            <div class="form-group pt-4 pb-1">
                   <button class="secondaryAction btn btn-primary" type="submit" name="action_primary" >{% raw %}{% trans 'Make Primary' %}{% endraw %}</button>
-                  <button class="secondaryAction btn btn-primary" type="submit" name="action_send" >{% raw %}{% trans 'Re-send Verification' %}{% endraw %}</button>
-                  <button class="primaryAction btn btn-primary" type="submit" name="action_remove" >{% raw %}{% trans 'Remove' %}{% endraw %}</button>
+                  <button class="secondaryAction btn btn-secondary" type="submit" name="action_send" >{% raw %}{% trans 'Re-send Verification' %}{% endraw %}</button>
+                  <button class="primaryAction btn btn-danger" type="submit" name="action_remove" >{% raw %}{% trans 'Remove' %}{% endraw %}</button>
             </div>
 
             </fieldset>
@@ -58,23 +58,27 @@
 
             {% raw %}{% endif %}{% endraw %}
 
+            </div>
+            </div>
 
-            <h2>{% raw %}{% trans "Add E-mail Address" %}{% endraw %}</h2>
-
+              <hr class="my-4 pl--3">
+          <div class="pl-4">
+              <div class="row pl--4 pt-2">
+            <h6 class="heading-small text-muted mb-3">{% raw %}{% trans "Add E-mail Address" %}{% endraw %}</h6>
+              </div>
+              <div class="row pl--4">
             <form method="post" action="{% raw %}{% url 'account_email' %}{% endraw %}" class="add_email">
                 {% raw %}{% csrf_token %}{% endraw %}
                 {% raw %}{{ form|crispy }}{% endraw %}
                 <button class="btn btn-primary" name="action_add" type="submit">{% raw %}{% trans "Add E-mail" %}{% endraw %}</button>
             </form>
-
-          </div>
+            </div>
+            </div>
           <!-- End Action buttons -->
         </div>
       </div>
     </div>
-  </div>
-</div>
-{% raw %}{% endblock content %}{% endraw %}
+{% raw %}{% endblock account_content %}{% endraw %}
 
 {% raw %}{% block javascript %}{% endraw %}
 {% raw %}{{ block.super }}{% endraw %}

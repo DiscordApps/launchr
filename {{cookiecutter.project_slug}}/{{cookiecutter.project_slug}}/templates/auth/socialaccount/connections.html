@@ -1,73 +1,82 @@
-{% raw %}{% extends "app/base.html" %}{% endraw %}
-{% raw %}{% load static i18n crispy_forms_tags %}{% endraw %}
+{% raw %}{% extends "app/account_base.html" %}{% endraw %}
+{% raw %}{% load static i18n crispy_forms_tags socialaccount %}{% endraw %}
 
-{% raw %}{% block title %}{% trans "Account Connections" %}{% endblock %}{% endraw %}
+{% raw %}{% block title %}{% trans "Third party logins" %}{% endblock %}{% endraw %}
 
 {% raw %}{% block breadcrumb %}{% endraw %}
-<h6 class="h2 text-white d-inline-block mb-0">{% raw %}{% trans "Account Connections" %}{% endraw %}</h6>
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% raw %}{% url "app:home" %}{% endraw %}"><i class="ni ni-app"></i></a></li>
+    <li class="breadcrumb-item"><a href="{% raw %}{% url "app:users:detail" %}{% endraw %}">{% raw %}{% trans "Account" %}{% endraw %}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{% raw %}{% trans "Third party logins" %}{% endraw %}</li>
+  </ol>
+</nav>
 {% raw %}{% endblock %}{% endraw %}
 
-{% raw %}{% block content %}{% endraw %}
-<div class="container-fluid mt--6">
-  <!-- Table -->
-  <div class="row">
-    <div class="col">
-      <div class="card shadow">
-        <div class="card-header bg-transparent">
-          <h3 class="mb-0">{% raw %}{% trans "Account Connections" %}{% endraw %}</h3>
-        </div>
-        <div class="card-body">
-          <div class="row w-100">
-            <p><strong># todo: this page needs some serious rework</strong></p>
+{% raw %}{% get_providers as socialaccount_providers %}{% endraw %}
 
-<h1>{% raw %}{% trans "Account Connections" %}{% endraw %}</h1>
+{% raw %}{% block account_content %}{% endraw %}
 
-{% raw %}{% if form.accounts %}{% endraw %}
-<p>{% raw %}{% blocktrans %}You can sign in to your account using any of the following third party accounts:{% endblocktrans %}{% endraw %}</p>
+<div class="col-xl-8 pb-4">
+  <div class="card bg-secondary shadow">
+    <div class="card-header bg-transparent">
+      <h3 class="mb-0">{% raw %}{% trans "Third party logins" %}{% endraw %}</h3>
+    </div>
+    <div class="card-body">
+      <h6 class="heading-small text-muted mb-4">{% raw %}{% trans "The following third party logins are associated with your account:" %}{% endraw %}</h6>
+      <div class="pl-4">
+        <div class="row">
+          {% raw %}{% if form.accounts %}{% endraw %}
+          <form method="post" action="{% raw %}{% url 'socialaccount_connections' %}{% endraw %}">
+            {% raw %}{% csrf_token %}{% endraw %}
 
+            <fieldset>
+              {% raw %}{% if form.non_field_errors %}{% endraw %}
+              <div id="errorMsg">{% raw %}{{ form.non_field_errors }}{% endraw %}</div>
+              {% raw %}{% endif %}{% endraw %}
 
-<form method="post" action="{% raw %}{% url 'socialaccount_connections' %}{% endraw %}">
-{% raw %}{% csrf_token %}{% endraw %}
+              {% raw %}{% for base_account in form.accounts %}{% endraw %}
+              {% raw %}{% with base_account.get_provider_account as account %}{% endraw %}
+              <div class="custom-control custom-radio mb-2">
+                <input class="custom-control-input" id="id_account_{% raw %}{{ base_account.id }}{% endraw %}" type="radio" name="account"
+                         value="{% raw %}{{ base_account.id }}{% endraw %}"/>
+                <label class="custom-control-label" for="id_account_{% raw %}{{ base_account.id }}{% endraw %}">
+                  {% raw %}{{ account }}{% endraw %}
+                  <span class="badge badge-dark">{% raw %}{{account.get_brand.name}}{% endraw %}</span>
 
-<fieldset>
-{% raw %}{% if form.non_field_errors %}{% endraw %}
-<div id="errorMsg">{% raw %}{{ form.non_field_errors }}{% endraw %}</div>
-{% raw %}{% endif %}{% endraw %}
+                </label>
+              </div>
+              {% raw %}{% endwith %}{% endraw %}
+              {% raw %}{% endfor %}{% endraw %}
 
-{% raw %}{% for base_account in form.accounts %}{% endraw %}
-{% raw %}{% with base_account.get_provider_account as account %}{% endraw %}
-<div>
-<label for="id_account_{% raw %}{{ base_account.id }}{% endraw %}">
-<input id="id_account_{% raw %}{{ base_account.id }}{% endraw %}" type="radio" name="account" value="{% raw %}{{ base_account.id }}{% endraw %}"/>
-<span class="socialaccount_provider {% raw %}{{ base_account.provider }} {{ account.get_brand.id }}{% endraw %}">{% raw %}{{account.get_brand.name}}{% endraw %}</span>
-{% raw %}{{ account }}{% endraw %}
-</label>
-</div>
-{% raw %}{% endwith %}{% endraw %}
-{% raw %}{% endfor %}{% endraw %}
+              <div class="pt-4 pb-1">
+                <button type="submit" class="btn btn-danger">{% raw %}{% trans 'Remove' %}{% endraw %}</button>
+              </div>
 
-<div>
-<button type="submit">{% raw %}{% trans 'Remove' %}{% endraw %}</button>
-</div>
+            </fieldset>
 
-</fieldset>
+          </form>
 
-</form>
-
-{% raw %}{% else %}{% endraw %}
-<p>{% raw %}{% trans 'You currently have no social network accounts connected to this account.' %}{% endraw %}</p>
-{% raw %}{% endif %}{% endraw %}
-
-<h2>{% raw %}{% trans 'Add a 3rd Party Account' %}{% endraw %}</h2>
-
-<ul class="socialaccount_providers">
-{% raw %}{% include "socialaccount/snippets/provider_list.html" with process="connect" %}{% endraw %}
-</ul>
-
-{% raw %}{% include "socialaccount/snippets/login_extra.html" %}{% endraw %}
-          </div>
+          {% raw %}{% else %}{% endraw %}
+          <p>{% raw %}{% trans 'You currently have no social network accounts connected to this account.'%}{% endraw %}</p>
+          {% raw %}{% endif %}{% endraw %}
         </div>
       </div>
+      <hr class="my-4 pl--5">
+      <h6 class="heading-small text-muted mb-4">{% raw %}{% trans 'Add a third party login' %}{% endraw %}</h6>
+
+          <div class="row pl-4">
+            <div>
+
+              {% raw %}{% include "socialaccount/snippets/provider_list.html" with process="connect" %}{% endraw %}
+
+
+            {% raw %}{% include "socialaccount/snippets/login_extra.html" %}{% endraw %}
+              </div>
+          </div>
+
+
+
     </div>
   </div>
 </div>

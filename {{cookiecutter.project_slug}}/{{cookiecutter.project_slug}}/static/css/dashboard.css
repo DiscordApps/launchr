@@ -20689,3 +20689,29 @@ pre>code.highlight {
 .form-group .invalid-feedback{
   display: block;
 }
+
+.breadcrumb{
+  background-color: transparent;
+  padding-bottom: 0;
+}
+
+.breadcrumb-item{
+  background-color: transparent;
+  font-size: .875rem;
+}
+
+.breadcrumb-item a{
+  color: #fff;
+}
+
+.breadcrumb-item.active{
+  color: #dee2e6;
+}
+
+.breadcrumb-item a i{
+  padding-top: 0.25rem;
+}
+
+.plan-heading, .plan-heading .heading-small{
+  font-size: 0.8rem !important;
+}

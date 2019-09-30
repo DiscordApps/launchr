@@ -59,49 +59,22 @@
     <!-- User -->
     <ul class="nav align-items-center d-md-none">
       <li class="nav-item dropdown">
-        <a class="nav-link nav-link-icon" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
-           aria-expanded="false">
-          <i class="ni ni-bell-55"></i>
-        </a>
-        <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-right" aria-labelledby="navbar-default_dropdown_1">
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Something else here</a>
-        </div>
-      </li>
-      <li class="nav-item dropdown">
         <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <div class="media align-items-center">
               <span class="avatar avatar-sm rounded-circle">
-                <img alt="Image placeholder" src="{% raw %}{% static 'img/theme/team-1-800x800.jpg' %}{% endraw %}">
+                <img alt="Image placeholder" src="{% raw %}{{ request.user.get_avatar_url }}{% endraw %}">
               </span>
           </div>
         </a>
         <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-right">
-          <div class=" dropdown-header noti-title">
-            <h6 class="text-overflow m-0">Welcome!</h6>
-          </div>
-          <a href="./examples/profile.html" class="dropdown-item">
+          <a href="{% raw %}{% url "app:users:detail" %}{% endraw %}" class="dropdown-item">
             <i class="ni ni-single-02"></i>
-            <span>My profile</span>
-          </a>
-          <a href="./examples/profile.html" class="dropdown-item">
-            <i class="ni ni-settings-gear-65"></i>
-            <span>Settings</span>
-          </a>
-          <a href="./examples/profile.html" class="dropdown-item">
-            <i class="ni ni-calendar-grid-58"></i>
-            <span>Activity</span>
-          </a>
-          <a href="./examples/profile.html" class="dropdown-item">
-            <i class="ni ni-support-16"></i>
-            <span>Support</span>
+            <span>{% raw %}{% trans "Account" %}{% endraw %}</span>
           </a>
           <div class="dropdown-divider"></div>
-          <a href="#!" class="dropdown-item">
-            <i class="ni ni-user-run"></i>
-            <span>Logout</span>
+          <a href="{% raw %}{% url "account_logout" %}{% endraw %}" class="dropdown-item">
+            <i class="ni ni-button-power"></i>
+            <span>{% raw %}{% trans "Logout" %}{% endraw %}</span>
           </a>
         </div>
       </li>
@@ -192,16 +165,18 @@
   <nav class="navbar navbar-top navbar-expand-md navbar-dark border-bottom" id="navbar-main">
     <div class="container-fluid">
       <!-- Brand -->
-      <div class="text-white">
-        <strong>Plan: </strong>{% raw %}{{ request.user.plan.name }}{% endraw %}
+      <div class="text-white pl-2 pt-1 plan-heading">
+        <strong class="heading-small pr-1">Plan </strong>{% raw %}<span class="heading-small">{{ request.user.plan.name }}</span> {% endraw %}
+
+        <strong class="heading-small pl-3 pr-1">{% raw %}{% trans "Status" %}{% endraw %}</strong>
+
         {% raw %}{% if request.user.has_active_subscription %}{% endraw %}
-        <span class="text-success">{% raw %}{% trans "active" %}{% endraw %}</span>
-        <strong>Next billing date: </strong>{% raw %}{{ request.user.next_billing_date }}{% endraw %}
+        <span class="heading-small text-success">{% raw %}{% trans "active" %}{% endraw %}</span>, {% raw %}{% trans "renews on" %} {{ request.user.next_billing_date|date:"SHORT_DATE_FORMAT" }}{% endraw %}
         <a href="#!" class="paddle_button" data-override="{% raw %}{{ request.user.get_cancel_url }}{% endraw %}">cancel</a>
         <a href="#!" class="paddle_button" data-override="{% raw %}{{ request.user.get_payment_update_url }}{% endraw %}">update</a>
         {% raw %}{% elif request.user.has_cancelled_subscription %}{% endraw %}
-        <span class="text-warning">{% raw %}{% trans "cancelled" %}{% endraw %}</span>
-        <strong>Cancel date: </strong>{% raw %}{{ request.user.cancellation_effective_date }}{% endraw %}
+        <span class="heading-small text-warning">{% raw %}{% trans "cancelled" %}{% endraw %}</span>
+        <strong class="heading-small pl-3 pr-1">{% raw %}{% trans "active" %}</strong> until {{ request.user.cancellation_effective_date|date:"SHORT_DATE_FORMAT" }}{% endraw %}
         {% raw %}{% endif %}{% endraw %}
       </div>
 
@@ -212,7 +187,7 @@
              aria-expanded="false">
             <div class="media align-items-center">
                 <span class="avatar avatar-sm rounded-circle">
-                  <img alt="" src="https://dummyimage.com/200x200/000/fff">
+                  <img alt="" src="{% raw %}{{ request.user.get_avatar_url }}{% endraw %}">
                 </span>
               <div class="media-body ml-2 d-none d-lg-block">
                 <span class="mb-0 text-sm  font-weight-bold">{% raw %}{{ request.user.email }}{% endraw %}</span>
@@ -225,7 +200,7 @@
             </div>
             <a href="{% raw %}{% url "app:users:detail" %}{% endraw %}" class="dropdown-item">
               <i class="ni ni-single-02"></i>
-              <span>{% raw %}{% trans "Profile" %}{% endraw %}</span>
+              <span>{% raw %}{% trans "Account" %}{% endraw %}</span>
             </a>
             <div class="dropdown-divider"></div>
             <a href="{% raw %}{% url "account_logout" %}{% endraw %}" class="dropdown-item">

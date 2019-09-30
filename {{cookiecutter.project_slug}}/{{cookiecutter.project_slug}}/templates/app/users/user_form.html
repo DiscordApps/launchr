@@ -1,31 +1,36 @@
-{% raw %}{% extends "app/base.html" %}{% endraw %}
+{% raw %}{% extends "app/account_base.html" %}{% endraw %}
 {% raw %}{% load crispy_forms_tags i18n %}{% endraw %}
 
-{% raw %}{% block title %}{{ user.username }}{% endblock %}{% endraw %}
+{% raw %}{% block title %}{% trans "Settings" %}{% endblock %}{% endraw %}
 
-{% raw %}{% block content %}{% endraw %}
-<div class="container-fluid mt--7">
-  <!-- Table -->
-  <div class="row">
-    <div class="col">
-      <div class="card shadow">
-        <div class="card-header bg-transparent">
-          <h3 class="mb-0">Icons</h3>
+{% raw %}{% block breadcrumb %}{% endraw %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% raw %}{% url "app:home" %}{% endraw %}"><i class="ni ni-app"></i></a></li>
+    <li class="breadcrumb-item"><a href="{% raw %}{% url "app:users:detail" %}{% endraw %}">{% raw %}{% trans "Account" %}{% endraw %}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{% raw %}{% trans "Settings" %}{% endraw %}</li>
+  </ol>
+</nav>
+{% raw %}{% endblock %}{% endraw %}
+
+{% raw %}{% block account_content %}{% endraw %}
+
+<div class="col-xl-8 pb-4">
+  <div class="card bg-secondary shadow">
+    <div class="card-header bg-transparent">
+          <h3 class="mb-0">{% raw %}{% trans "Settings" %}{% endraw %}</h3>
         </div>
         <div class="card-body">
-          <h1>{% raw %}{{ user.username }}{% endraw %}</h1>
           <form class="form-horizontal" method="post" action="{% raw %}{% url 'app:users:update' %}{% endraw %}">
             {% raw %}{% csrf_token %}{% endraw %}
             {% raw %}{{ form|crispy }}{% endraw %}
             <div class="control-group">
               <div class="controls">
-                <button type="submit" class="btn">{% raw %}{% trans "Update" %}{% endraw %}</button>
+                <button type="submit" class="btn btn-primary">{% raw %}{% trans "Update" %}{% endraw %}</button>
               </div>
             </div>
           </form>
         </div>
       </div>
     </div>
-  </div>
-</div>
 {% raw %}{% endblock %}{% endraw %}

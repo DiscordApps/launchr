@@ -1,54 +1,35 @@
-{% raw %}{% extends "app/base.html" %}{% endraw %}
+{% raw %}{% extends "app/account_base.html" %}{% endraw %}
 {% raw %}{% load static i18n %}{% endraw %}
 
-{% raw %}{% block title %}{% trans "Profile" %}{% endblock %}{% endraw %}
+{% raw %}{% block title %}{% trans "Account" %}{% endblock %}{% endraw %}
 
 {% raw %}{% block breadcrumb %}{% endraw %}
-<h6 class="h2 text-white d-inline-block mb-0">{% raw %}{% trans "Profile" %}{% endraw %}</h6>
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% raw %}{% url "app:home" %}{% endraw %}"><i class="ni ni-app"></i></a></li>
+    <li class="breadcrumb-itemactive" aria-current="page">{% raw %}{% trans "Account" %}{% endraw %}</li>
+  </ol>
+</nav>
 {% raw %}{% endblock %}{% endraw %}
 
-{% raw %}{% block content %}{% endraw %}
-<div class="container-fluid mt--6">
-  <!-- Table -->
-  <div class="row">
-    <div class="col">
-      <div class="card shadow">
-        <div class="card-header bg-transparent">
-          <h3 class="mb-0">#todo make something useful here</h3>
+{% raw %}{% block account_content %}{% endraw %}
+<div class="col-xl-8">
+  <div class="card bg-secondary shadow">
+    <div class="card-header bg-transparent">
+          <h3 class="mb-0">Account page</h3>
         </div>
         <div class="card-body">
           <div class="row">
             <div class="col-sm-12">
-
-              <h2>{% raw %}{{ object.username }}{% endraw %}</h2>
-              {% raw %}{% if object.name %}{% endraw %}
-              <p>{% raw %}{{ object.name }}{% endraw %}</p>
-              {% raw %}{% endif %}{% endraw %}
+              <p>This is the main entrypoint for your users account page.</p>
+              <p>You should add something useful here.</p>
             </div>
           </div>
 
-          {% raw %}{% if object == request.user %}{% endraw %}
-          <!-- Action buttons -->
-          <div class="row">
-
-            <div class="col-sm-12">
-              <a class="btn btn-primary" href="{% raw %}{% url 'app:users:update' %}{% endraw %}" role="button">My
-                Info</a>
-              <a class="btn btn-primary" href="{% raw %}{% url 'account_email' %}{% endraw %}" role="button">E-Mail</a>
-              <!-- Your Stuff: Custom user template urls -->
-            </div>
-
-          </div>
-          <!-- End Action buttons -->
         </div>
-      </div>
-    </div>
   </div>
 </div>
 
 
-{% raw %}{% endif %}{% endraw %}
-
-
-{% raw %}{% endblock content %}{% endraw %}
+{% raw %}{% endblock account_content %}{% endraw %}
 

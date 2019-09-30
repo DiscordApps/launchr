@@ -1,0 +1,79 @@
+{% raw %}{% extends "app/base.html" %}{% endraw %}
+{% raw %}{% load static i18n crispy_forms_tags %}{% endraw %}
+
+{% raw %}{% block content %}{% endraw %}
+<div class="container-fluid mt--6">
+  <!-- Table -->
+  <div class="row">
+    {% raw %}{% block account_content %}{% endraw %}
+
+    {% raw %}{% endblock %}{% endraw %}
+    <div class="col-xl-4 order-xl-2 mb-5 mb-xl-0">
+          <div class="card card-profile shadow">
+            <div class="row justify-content-center">
+              <div class="col-lg-3 order-lg-2">
+                <div class="card-profile-image">
+                  <a href="{% raw %}{% url "app:users:detail" %}{% endraw %}">
+                    <img src="{% raw %}{{ request.user.get_avatar_url }}{% endraw %}" class="rounded-circle d-sm-none d-xl-block">
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
+              <div class="d-flex justify-content-between">
+                &nbsp;
+              </div>
+            </div>
+            <div class="card-body pt-0 pt-md-4">
+
+              <div class="text-center mt-md-5">
+                <h3>
+                  {% raw %}{{ request.user.email }}{% endraw %}
+                </h3>
+                <div class="h5 font-weight-300">
+                  {% raw %}{{ request.user.plan.name }},
+                  {% if request.user.has_active_subscription %}
+
+        <span class="text-success">{% trans "active" %}</span>
+                  <p class="h5 font-weight-300">{% trans "renews on" %} {{ request.user.next_billing_date|date:"SHORT_DATE_FORMAT" }}</p>
+
+        {% elif request.user.has_cancelled_subscription %}
+        <span class="text-warning">{% trans "cancelled" %}</span>
+                  <p class="h5 font-weight-300">{% trans "active until" %} {{ request.user.cancellation_effective_date|date:"SHORT_DATE_FORMAT" }}</p>
+        {% endif %}{% endraw %}
+                </div>
+
+                <hr class="my-4">
+                <div class="mt-4">
+                  <a href="{% raw %}{% url "account_email" %}{% endraw %}" class="btn btn-sm btn-info">{% raw %}{% trans "Manage Email" %}{% endraw %}</a>
+                  <a href="{% raw %}{% url "account_change_password" %}{% endraw %}" class="btn btn-sm btn-info">{% raw %}{% trans "Change Password" %}{% endraw %}</a>
+                  <a href="{% raw %}{% url "socialaccount_connections" %}{% endraw %}" class="btn btn-sm btn-info">{% raw %}{% trans "Logins" %}{% endraw %}</a>
+                  <a href="{% raw %}{% url 'app:users:update' %}{% endraw %}" class="btn btn-sm btn-info">{% raw %}{% trans "Settings" %}{% endraw %}</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+  </div>
+</div>
+{% raw %}{% endblock content %}{% endraw %}
+
+{% raw %}{% block javascript %}{% endraw %}
+{% raw %}{{ block.super }}{% endraw %}
+<script type="text/javascript">
+(function() {
+  var message = "{% raw %}{% trans 'Do you really want to remove the selected e-mail address?' %}{% endraw %}";
+  var actions = document.getElementsByName('action_remove');
+  if (actions.length) {
+    actions[0].addEventListener("click", function(e) {
+      if (! confirm(message)) {
+        e.preventDefault();
+      }
+    });
+  }
+})();
+
+$('.form-group').removeClass('row');
+</script>
+{% raw %}{% endblock %}{% endraw %}
+
