@@ -35,6 +35,7 @@ def test_is_paddle_customer(user: settings.AUTH_USER_MODEL):
 
 
 def test_subscription_status(user: settings.AUTH_USER_MODEL):
+    settings.SAAS_TRIAL_LENGTH = timedelta(days=14)
     user.vendor = "paddle"
     user.vendor_subscription_status = 'deleted'
     assert user.subscription_status == "cancelled"
@@ -113,6 +114,7 @@ def test_has_trialling_subscription(user: settings.AUTH_USER_MODEL, settings):
 
 
 def test_has_no_subscription(user: settings.AUTH_USER_MODEL, settings):
+    settings.SAAS_TRIAL_LENGTH = timedelta(days=14)
     settings.SAAS_SUBSCRIPTION_TYPE = "None"
     assert user.has_no_subscription == True
 
