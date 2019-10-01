@@ -169,7 +169,6 @@
         <strong class="heading-small pr-1">Plan </strong>{% raw %}<span class="heading-small">{{ request.user.plan.name }}</span> {% endraw %}
 
         <strong class="heading-small pl-3 pr-1">{% raw %}{% trans "Status" %}{% endraw %}</strong>
-
         {% raw %}{% if request.user.has_active_subscription %}{% endraw %}
         <span class="heading-small text-success">{% raw %}{% trans "active" %}{% endraw %}</span>, {% raw %}{% trans "renews on" %} {{ request.user.next_billing_date|date:"SHORT_DATE_FORMAT" }}{% endraw %}
         <a href="#!" class="paddle_button" data-override="{% raw %}{{ request.user.get_cancel_url }}{% endraw %}">cancel</a>
