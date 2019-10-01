@@ -611,7 +611,7 @@ class TestChangePlanView:
         data = {"plan_id": "pro_plan_id"}
         assert client.post(reverse("payments:change_plan"), data).status_code == 302
         user = django_user_model.objects.get(pk=user.pk)
-        assert user.vendor_subscription_id == request_data['response']['subscription_id']
+        assert user.vendor_subscription_id == request_data['response']['subscription_id']  # type: ignore
 
     def test_update_paddle_plan_invalid_plan(
         self, user: django_settings.AUTH_USER_MODEL, settings: django_settings,
@@ -699,4 +699,4 @@ class TestChangePlanView:
         )
         view = ChangePlanView()
         assert view.update_paddle_plan(user=user, plan_id='pro_plan_id') == True
-        assert user.vendor_subscription_id == data['response']['subscription_id']
+        assert user.vendor_subscription_id == data['response']['subscription_id']  # type: ignore

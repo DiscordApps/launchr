@@ -78,7 +78,7 @@ class PaddleWebhookView(UpdateView):
 
         # verify the data
         key = RSA.importKey(public_key_der)
-        digest = SHA.new()
+        digest = SHA.new()  # type: ignore
         digest.update(serialized_data)
         verifier = PKCS1_v1_5.new(key)
         signature = base64.b64decode(signature)
