@@ -28,10 +28,10 @@ def test_get_payment_update_url(user: settings.AUTH_USER_MODEL):
 
 
 def test_is_paddle_customer(user: settings.AUTH_USER_MODEL):
-    assert user.is_paddle_customer == False
+    assert not user.is_paddle_customer
 
     user.vendor = 'paddle'
-    assert user.is_paddle_customer == True
+    assert user.is_paddle_customer
 
 
 def test_subscription_status(user: settings.AUTH_USER_MODEL):
@@ -62,22 +62,22 @@ def test_subscription_status(user: settings.AUTH_USER_MODEL):
 def test_has_active_subscription(user: settings.AUTH_USER_MODEL):
     user.vendor = 'paddle'
     user.vendor_subscription_status = 'active'
-    assert user.has_active_subscription == True
+    assert user.has_active_subscription
 
     user.vendor_subscription_status = 'cancelled'
-    assert user.has_active_subscription == False
+    assert not user.has_active_subscription
 
 
 def test_has_cancelled_subscription(user: settings.AUTH_USER_MODEL):
     user.vendor = 'paddle'
     user.vendor_subscription_status = 'deleted'
-    assert user.has_cancelled_subscription == True
+    assert user.has_cancelled_subscription
 
     user.vendor_subscription_status = 'cancelled'
-    assert user.has_cancelled_subscription == True
+    assert user.has_cancelled_subscription
 
     user.vendor_subscription_status = 'active'
-    assert user.has_cancelled_subscription == False
+    assert not user.has_cancelled_subscription
 
 
 def test_get_absolute_url(user: settings.AUTH_USER_MODEL):
@@ -90,54 +90,54 @@ def test_str(user: settings.AUTH_USER_MODEL):
 
 def test_has_freemium_subscription(user: settings.AUTH_USER_MODEL, settings):
     settings.SAAS_SUBSCRIPTION_TYPE = "freemium"
-    assert user.has_freemium_subscription == True
+    assert user.has_freemium_subscription
 
     user.plan_id = "abcde"
-    assert user.has_freemium_subscription == False
+    assert not user.has_freemium_subscription
 
     user.plan_id = None
     settings.SAAS_SUBSCRIPTION_TYPE = "trial"
-    assert user.has_freemium_subscription == False
+    assert not user.has_freemium_subscription
 
 
 def test_has_trialling_subscription(user: settings.AUTH_USER_MODEL, settings):
     settings.SAAS_SUBSCRIPTION_TYPE = "trial"
     settings.SAAS_TRIAL_LENGTH = timedelta(days=14)
-    assert user.has_trialling_subscription == True
+    assert user.has_trialling_subscription
 
     user.plan_id = "abcde"
-    assert user.has_trialling_subscription == False
+    assert not user.has_trialling_subscription
 
     user.plan_id = None
     user.date_joined = user.date_joined - settings.SAAS_TRIAL_LENGTH - timedelta(days=1)
-    assert user.has_trialling_subscription == False
+    assert not user.has_trialling_subscription
 
 
 def test_has_no_subscription(user: settings.AUTH_USER_MODEL, settings):
     settings.SAAS_TRIAL_LENGTH = timedelta(days=14)
     settings.SAAS_SUBSCRIPTION_TYPE = "None"
-    assert user.has_no_subscription == True
+    assert user.has_no_subscription
 
     user.plan_id = "abcd"
-    assert user.has_no_subscription == False
+    assert not user.has_no_subscription
 
     user.plan_id = None
     settings.SAAS_SUBSCRIPTION_TYPE = None
-    assert user.has_no_subscription == True
+    assert user.has_no_subscription
 
     user.plan_id = "abcd"
-    assert user.has_no_subscription == False
+    assert not user.has_no_subscription
 
     user.plan_id = None
     settings.SAAS_SUBSCRIPTION_TYPE = 'trial'
-    assert user.has_no_subscription == False
+    assert not user.has_no_subscription
 
     user.plan_id = "abcd"
-    assert user.has_no_subscription == False
+    assert not user.has_no_subscription
 
     user.plan_id = None
     user.date_joined = user.date_joined - settings.SAAS_TRIAL_LENGTH - timedelta(days=1)
-    assert user.has_no_subscription == True
+    assert user.has_no_subscription
 
 
 def test_trial_ends_at(user: settings.AUTH_USER_MODEL, settings):
@@ -152,17 +152,17 @@ def test_trial_ends_at(user: settings.AUTH_USER_MODEL, settings):
 
 def test_is_trial_active(user: settings.AUTH_USER_MODEL):
     settings.SAAS_TRIAL_LENGTH = timedelta(days=14)
-    assert user.is_trial_active == True
+    assert user.is_trial_active
 
     user.date_joined = user.date_joined - settings.SAAS_TRIAL_LENGTH - timedelta(days=1)
-    assert user.is_trial_active == False
+    assert not user.is_trial_active
 
 
 def test_has_paid_subscription(user: settings.AUTH_USER_MODEL):
-    assert user.has_paid_subscription == False
+    assert not user.has_paid_subscription
 
     user.vendor_subscription_id = "abcd"
-    assert user.has_paid_subscription == True
+    assert user.has_paid_subscription
 
 
 def test_plan(user: settings.AUTH_USER_MODEL, settings):

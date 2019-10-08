@@ -1,3 +1,14 @@
+import requests
+from datetime import datetime
+import logging
+import collections
+import base64
+from uuid import UUID
+from Crypto.Signature import PKCS1_v1_5
+from Crypto.PublicKey import RSA
+from Crypto.Hash import SHA
+import phpserialize
+
 from django.views.generic import TemplateView, UpdateView, FormView
 from django.conf import settings
 from django.utils.decorators import method_decorator
@@ -12,19 +23,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from {{cookiecutter.project_slug}}.users.models import User
 from {{cookiecutter.project_slug}}.payments.forms import ChangePlanForm
 from {{cookiecutter.project_slug}}.payments.plan import plan_by_id
-
-import requests
-from datetime import datetime
-import logging
-import collections
-import base64
-from uuid import UUID
-
-from Crypto.Signature import PKCS1_v1_5
-from Crypto.PublicKey import RSA
-from Crypto.Hash import SHA
-import hashlib
-import phpserialize
 
 
 logger = logging.getLogger(__name__)
@@ -92,7 +90,7 @@ class PaddleWebhookView(UpdateView):
         ):
             logger.error(
                 "Received Paddle webhook with invalid signature",
-                extra = {"payload": self.payload}
+                extra={"payload": self.payload}
             )
             raise PermissionDenied
 

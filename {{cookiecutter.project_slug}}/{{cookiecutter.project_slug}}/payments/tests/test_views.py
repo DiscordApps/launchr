@@ -1,18 +1,35 @@
-import pytest
-from django.urls import reverse
-from {{cookiecutter.project_slug}}.payments.views import(
-    PaddleWebhookView, ChangePlanView
-)
 from datetime import datetime
+import pytest
+import requests_mock as mocker
+
+from django.urls import reverse
 from django.utils.timezone import make_aware
 from django.conf import settings as django_settings
 from django.test import Client
-import requests_mock as mocker
+
+from {{cookiecutter.project_slug}}.payments.views import (
+    PaddleWebhookView, ChangePlanView
+)
+
+PADDLE_TESTING_PUBKEY = """-----BEGIN PUBLIC KEY-----
+MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAwuEU7R9nHgWwWy5p9ws3
+iORHpFn1L8PkdzNtlZaltck5lD5qcUzmQJiW572LzO8oNFhPgPpTnrvcHfCFTLjc
+MmavzroWKiKCf3fn3d7k60D5HDMy4n/+PP6hV2fVnk3Iq3uhxMK5DkKRPqynAFx/
+OX20ijvuWGH3rSmmu/JjN0k7QIcMhSdpZuJ7eqtPtBSdg8uRWr8U2ZL2Wufu0xIF
+pDBxEK7f+0ECq0x7GftrtvLnbTV4SMblSnN90RMocNsRoul+Ohx4unqLxprPh279
+h8iqJspXhb8hKm5PuKuv9N3AXOZzckRTQSFtT/fE3FJm0CToR614r01qc+yqft0e
+scTVNY95gug3aqKmjFdwLBVArdycU9+mF7WvmCDUshjot9CDHKXJCkh2Whfwr9Mq
++NN4fu6nd/OF3xaq5jZjN07EyfzYKBU1GBhg3uNfR6v4aogQhKByFwtUUyjV7UaO
+yOGH9AMXwv0W/GzDvtZlPwYWUjj9OsJJASG+fYYdwvZRKrs88gTqW0nVXCLgAH3q
+a8hsFHngHuJmCkllv/U9JdSiNm2j+ThIXZP+sGb7aT65eYGni7AIBZf56f+gFdCM
+IczOqlDDcm8YJ1WNIHvTqg4Qa5/4GcMn69z0NGtYStPbex2AmNwulZaSqXx73qon
+7GiVDmdU0t9KRSj9F3nAXVMCAwEAAQ==
+-----END PUBLIC KEY-----"""
 
 pytestmark = pytest.mark.django_db
 
-class TestPricingView:
 
+class TestPricingView:
 
     def test_get_unauthenticated(
         self, settings: django_settings, client: Client
@@ -58,7 +75,6 @@ class TestPricingView:
         assert 'PADDLE_VENDOR_ID' not in response.context
         assert response.context['plans'] == settings.SAAS_PLANS
 
-
     def test_get_authenticated(
         self, user: django_settings.AUTH_USER_MODEL, settings: django_settings, client: Client
     ):
@@ -102,36 +118,23 @@ class TestPricingView:
         assert response.context['PADDLE_VENDOR_ID'] == settings.PADDLE_VENDOR_ID
         assert response.context['plans'] == settings.SAAS_PLANS
 
-class TestPaddleWebhookView:
 
+class TestPaddleWebhookView:
 
     def test_get(self, client: Client):
         response = client.get(reverse("payments:paddle_webhook"))
         assert response.status_code == 405
 
-
     def test_post_uuid_does_not_exist(
         self, client: Client, settings
     ):
-        settings.PADDLE_PUBLIC_KEY = """-----BEGIN PUBLIC KEY-----
-MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAwuEU7R9nHgWwWy5p9ws3
-iORHpFn1L8PkdzNtlZaltck5lD5qcUzmQJiW572LzO8oNFhPgPpTnrvcHfCFTLjc
-MmavzroWKiKCf3fn3d7k60D5HDMy4n/+PP6hV2fVnk3Iq3uhxMK5DkKRPqynAFx/
-OX20ijvuWGH3rSmmu/JjN0k7QIcMhSdpZuJ7eqtPtBSdg8uRWr8U2ZL2Wufu0xIF
-pDBxEK7f+0ECq0x7GftrtvLnbTV4SMblSnN90RMocNsRoul+Ohx4unqLxprPh279
-h8iqJspXhb8hKm5PuKuv9N3AXOZzckRTQSFtT/fE3FJm0CToR614r01qc+yqft0e
-scTVNY95gug3aqKmjFdwLBVArdycU9+mF7WvmCDUshjot9CDHKXJCkh2Whfwr9Mq
-+NN4fu6nd/OF3xaq5jZjN07EyfzYKBU1GBhg3uNfR6v4aogQhKByFwtUUyjV7UaO
-yOGH9AMXwv0W/GzDvtZlPwYWUjj9OsJJASG+fYYdwvZRKrs88gTqW0nVXCLgAH3q
-a8hsFHngHuJmCkllv/U9JdSiNm2j+ThIXZP+sGb7aT65eYGni7AIBZf56f+gFdCM
-IczOqlDDcm8YJ1WNIHvTqg4Qa5/4GcMn69z0NGtYStPbex2AmNwulZaSqXx73qon
-7GiVDmdU0t9KRSj9F3nAXVMCAwEAAQ==
-    -----END PUBLIC KEY-----"""
+        settings.PADDLE_PUBLIC_KEY = PADDLE_TESTING_PUBKEY
 
         data = {
             'alert_id': '38713417',
             'alert_name': 'subscription_created',
-            'cancel_url': 'https://checkout.paddle.com/subscription/cancel?user=7&subscription=6&hash=1b1770968848660fd12777a809166d920b1d8c0d',
+            'cancel_url': 'https://checkout.paddle.com/subscription/cancel?user=7&subscription'
+                          '=6&hash=1b1770968848660fd12777a809166d920b1d8c0d',
             'checkout_id': '8-9c4ffca208adbe5-959b2ce6a6',
             'currency': 'GBP',
             'email': 'hackett.richmond@example.com',
@@ -144,38 +147,33 @@ IczOqlDDcm8YJ1WNIHvTqg4Qa5/4GcMn69z0NGtYStPbex2AmNwulZaSqXx73qon
             'subscription_id': '1',
             'subscription_plan_id': '6',
             'unit_price': 'unit_price',
-            'update_url': 'https://checkout.paddle.com/subscription/update?user=2&subscription=5&hash=1bcef50d4889c8be3b4f043768c2b7dafb935f2a',
+            'update_url': 'https://checkout.paddle.com/subscription/update?user=2&subscription=5&'
+                          'hash=1bcef50d4889c8be3b4f043768c2b7dafb935f2a',
             'user_id': '7',
-            'p_signature': 'Dkee4uL9PSF/212B00LHDmDojT1ZFS0C+L+cEJ3TUZO6TYsEmNdK4cr6v/9GQjsynzZSByNXLfISP19QqHKgv1ydPPJwymzE9gMJzl6zsLegq+f3j/gDiGNCkmQ/Y3zM4OQ5CXs/pu45PG4Re6mlRvzRusOsLbv+/LVwFxsaYn7oH2C15+B69C3ZZhW6NwunJIG580I6r0x9iG6tdsZQpVrIv7mOAUW59/UykukwWwtASZImD4/uWVDJ+8bDFvczqdfF7r9tTq4soSmC7uDwKHNJYLP1g8R/TaBfaFAZtX2tQ9yyFX102mALhKxrFjwDyhiQK4wK035DVxDxjEP2VxdccidEwbAIoQEdCLjSywY6C4CG9wyWVOjniIMrSbgXL4wpHdLmGFx+ee1TZXaxbmrD44mvZw+CksfzIydHeCBHkB91QLgckat2YqTn9YPtxkCHfBnAgxYKp2yvpBtIpu5Pf/nowC2V5bRSKRHF6TR0njM3eqATucnPbe/lXml84KEvfoMd4R9DnNOo/lPZfkOBoxbWuAZWwnM8vxObcM2Pct5WJuj9Fhs9szNzk6LkQzAdtycJf396CZG0ewHt0MC0lGsdBAg3GtAJV672tdfx2JrqQHhJurz1ZccU9xdpSKDi3fa/ww7icGaJb/eHAmGNFWzj3ba27qTT6WetfmM='
+            'p_signature': 'Dkee4uL9PSF/212B00LHDmDojT1ZFS0C+L+cEJ3TUZO6TYsEmNdK4cr6v/9GQjsynzZSByNXLfISP19QqHKgv1ydPPJ'
+                           'wymzE9gMJzl6zsLegq+f3j/gDiGNCkmQ/Y3zM4OQ5CXs/pu45PG4Re6mlRvzRusOsLbv+/LVwFxsaYn7oH2C15+B69C'
+                           '3ZZhW6NwunJIG580I6r0x9iG6tdsZQpVrIv7mOAUW59/UykukwWwtASZImD4/uWVDJ+8bDFvczqdfF7r9tTq4soSmC7'
+                           'uDwKHNJYLP1g8R/TaBfaFAZtX2tQ9yyFX102mALhKxrFjwDyhiQK4wK035DVxDxjEP2VxdccidEwbAIoQEdCLjSywY6'
+                           'C4CG9wyWVOjniIMrSbgXL4wpHdLmGFx+ee1TZXaxbmrD44mvZw+CksfzIydHeCBHkB91QLgckat2YqTn9YPtxkCHfBn'
+                           'AgxYKp2yvpBtIpu5Pf/nowC2V5bRSKRHF6TR0njM3eqATucnPbe/lXml84KEvfoMd4R9DnNOo/lPZfkOBoxbWuAZWwn'
+                           'M8vxObcM2Pct5WJuj9Fhs9szNzk6LkQzAdtycJf396CZG0ewHt0MC0lGsdBAg3GtAJV672tdfx2JrqQHhJurz1ZccU9'
+                           'xdpSKDi3fa/ww7icGaJb/eHAmGNFWzj3ba27qTT6WetfmM='
         }
 
         # test user where uuid does not exist
         response = client.post(reverse("payments:paddle_webhook"), data)
         assert response.status_code == 404
 
-
     def test_post_uuid_exists(
         self, user: django_settings.AUTH_USER_MODEL, client: Client, django_user_model, settings
     ):
-        settings.PADDLE_PUBLIC_KEY = """-----BEGIN PUBLIC KEY-----
-MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAwuEU7R9nHgWwWy5p9ws3
-iORHpFn1L8PkdzNtlZaltck5lD5qcUzmQJiW572LzO8oNFhPgPpTnrvcHfCFTLjc
-MmavzroWKiKCf3fn3d7k60D5HDMy4n/+PP6hV2fVnk3Iq3uhxMK5DkKRPqynAFx/
-OX20ijvuWGH3rSmmu/JjN0k7QIcMhSdpZuJ7eqtPtBSdg8uRWr8U2ZL2Wufu0xIF
-pDBxEK7f+0ECq0x7GftrtvLnbTV4SMblSnN90RMocNsRoul+Ohx4unqLxprPh279
-h8iqJspXhb8hKm5PuKuv9N3AXOZzckRTQSFtT/fE3FJm0CToR614r01qc+yqft0e
-scTVNY95gug3aqKmjFdwLBVArdycU9+mF7WvmCDUshjot9CDHKXJCkh2Whfwr9Mq
-+NN4fu6nd/OF3xaq5jZjN07EyfzYKBU1GBhg3uNfR6v4aogQhKByFwtUUyjV7UaO
-yOGH9AMXwv0W/GzDvtZlPwYWUjj9OsJJASG+fYYdwvZRKrs88gTqW0nVXCLgAH3q
-a8hsFHngHuJmCkllv/U9JdSiNm2j+ThIXZP+sGb7aT65eYGni7AIBZf56f+gFdCM
-IczOqlDDcm8YJ1WNIHvTqg4Qa5/4GcMn69z0NGtYStPbex2AmNwulZaSqXx73qon
-7GiVDmdU0t9KRSj9F3nAXVMCAwEAAQ==
-    -----END PUBLIC KEY-----"""
+        settings.PADDLE_PUBLIC_KEY = PADDLE_TESTING_PUBKEY
 
         data = {
             'alert_id': '38713417',
             'alert_name': 'subscription_created',
-            'cancel_url': 'https://checkout.paddle.com/subscription/cancel?user=7&subscription=6&hash=1b1770968848660fd12777a809166d920b1d8c0d',
+            'cancel_url': 'https://checkout.paddle.com/subscription/cancel?user=7&subscription=6&hash=1b1770968848660fd'
+                          '12777a809166d920b1d8c0d',
             'checkout_id': '8-9c4ffca208adbe5-959b2ce6a6',
             'currency': 'GBP',
             'email': 'hackett.richmond@example.com',
@@ -188,39 +186,34 @@ IczOqlDDcm8YJ1WNIHvTqg4Qa5/4GcMn69z0NGtYStPbex2AmNwulZaSqXx73qon
             'subscription_id': '1',
             'subscription_plan_id': '6',
             'unit_price': 'unit_price',
-            'update_url': 'https://checkout.paddle.com/subscription/update?user=2&subscription=5&hash=1bcef50d4889c8be3b4f043768c2b7dafb935f2a',
+            'update_url': 'https://checkout.paddle.com/subscription/update?user=2&subscription=5&hash=1bcef50d4889c8be3'
+                          'b4f043768c2b7dafb935f2a',
             'user_id': '7',
-            'p_signature': 'Dkee4uL9PSF/212B00LHDmDojT1ZFS0C+L+cEJ3TUZO6TYsEmNdK4cr6v/9GQjsynzZSByNXLfISP19QqHKgv1ydPPJwymzE9gMJzl6zsLegq+f3j/gDiGNCkmQ/Y3zM4OQ5CXs/pu45PG4Re6mlRvzRusOsLbv+/LVwFxsaYn7oH2C15+B69C3ZZhW6NwunJIG580I6r0x9iG6tdsZQpVrIv7mOAUW59/UykukwWwtASZImD4/uWVDJ+8bDFvczqdfF7r9tTq4soSmC7uDwKHNJYLP1g8R/TaBfaFAZtX2tQ9yyFX102mALhKxrFjwDyhiQK4wK035DVxDxjEP2VxdccidEwbAIoQEdCLjSywY6C4CG9wyWVOjniIMrSbgXL4wpHdLmGFx+ee1TZXaxbmrD44mvZw+CksfzIydHeCBHkB91QLgckat2YqTn9YPtxkCHfBnAgxYKp2yvpBtIpu5Pf/nowC2V5bRSKRHF6TR0njM3eqATucnPbe/lXml84KEvfoMd4R9DnNOo/lPZfkOBoxbWuAZWwnM8vxObcM2Pct5WJuj9Fhs9szNzk6LkQzAdtycJf396CZG0ewHt0MC0lGsdBAg3GtAJV672tdfx2JrqQHhJurz1ZccU9xdpSKDi3fa/ww7icGaJb/eHAmGNFWzj3ba27qTT6WetfmM='
+            'p_signature': 'Dkee4uL9PSF/212B00LHDmDojT1ZFS0C+L+cEJ3TUZO6TYsEmNdK4cr6v/9GQjsynzZSByNXLfISP19QqHKgv1ydPPJ'
+                           'wymzE9gMJzl6zsLegq+f3j/gDiGNCkmQ/Y3zM4OQ5CXs/pu45PG4Re6mlRvzRusOsLbv+/LVwFxsaYn7oH2C15+B69C'
+                           '3ZZhW6NwunJIG580I6r0x9iG6tdsZQpVrIv7mOAUW59/UykukwWwtASZImD4/uWVDJ+8bDFvczqdfF7r9tTq4soSmC7'
+                           'uDwKHNJYLP1g8R/TaBfaFAZtX2tQ9yyFX102mALhKxrFjwDyhiQK4wK035DVxDxjEP2VxdccidEwbAIoQEdCLjSywY6'
+                           'C4CG9wyWVOjniIMrSbgXL4wpHdLmGFx+ee1TZXaxbmrD44mvZw+CksfzIydHeCBHkB91QLgckat2YqTn9YPtxkCHfBn'
+                           'AgxYKp2yvpBtIpu5Pf/nowC2V5bRSKRHF6TR0njM3eqATucnPbe/lXml84KEvfoMd4R9DnNOo/lPZfkOBoxbWuAZWwn'
+                           'M8vxObcM2Pct5WJuj9Fhs9szNzk6LkQzAdtycJf396CZG0ewHt0MC0lGsdBAg3GtAJV672tdfx2JrqQHhJurz1ZccU9'
+                           'xdpSKDi3fa/ww7icGaJb/eHAmGNFWzj3ba27qTT6WetfmM='
         }
         # test user where this uuid exists
         django_user_model.objects.create_user(username="the bla", uuid=data['passthrough'], email=user.email)
         response = client.post(reverse("payments:paddle_webhook"), data)
         assert response.status_code == 200
 
-
     def test_post_invalid_uuid(
         self, client: Client, settings
     ):
-        settings.PADDLE_PUBLIC_KEY = """-----BEGIN PUBLIC KEY-----
-MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAwuEU7R9nHgWwWy5p9ws3
-iORHpFn1L8PkdzNtlZaltck5lD5qcUzmQJiW572LzO8oNFhPgPpTnrvcHfCFTLjc
-MmavzroWKiKCf3fn3d7k60D5HDMy4n/+PP6hV2fVnk3Iq3uhxMK5DkKRPqynAFx/
-OX20ijvuWGH3rSmmu/JjN0k7QIcMhSdpZuJ7eqtPtBSdg8uRWr8U2ZL2Wufu0xIF
-pDBxEK7f+0ECq0x7GftrtvLnbTV4SMblSnN90RMocNsRoul+Ohx4unqLxprPh279
-h8iqJspXhb8hKm5PuKuv9N3AXOZzckRTQSFtT/fE3FJm0CToR614r01qc+yqft0e
-scTVNY95gug3aqKmjFdwLBVArdycU9+mF7WvmCDUshjot9CDHKXJCkh2Whfwr9Mq
-+NN4fu6nd/OF3xaq5jZjN07EyfzYKBU1GBhg3uNfR6v4aogQhKByFwtUUyjV7UaO
-yOGH9AMXwv0W/GzDvtZlPwYWUjj9OsJJASG+fYYdwvZRKrs88gTqW0nVXCLgAH3q
-a8hsFHngHuJmCkllv/U9JdSiNm2j+ThIXZP+sGb7aT65eYGni7AIBZf56f+gFdCM
-IczOqlDDcm8YJ1WNIHvTqg4Qa5/4GcMn69z0NGtYStPbex2AmNwulZaSqXx73qon
-7GiVDmdU0t9KRSj9F3nAXVMCAwEAAQ==
-    -----END PUBLIC KEY-----"""
+        settings.PADDLE_PUBLIC_KEY = PADDLE_TESTING_PUBKEY
 
         # test invalid uuid
         data = {
             'alert_id': '1729760535',
             'alert_name': 'subscription_created',
-            'cancel_url': 'https://checkout.paddle.com/subscription/cancel?user=7&subscription=6&hash=1b1770968848660fd12777a809166d920b1d8c0d',
+            'cancel_url': 'https://checkout.paddle.com/subscription/cancel?user=7&subscription=6&hash=1b1770968848660fd'
+                          '12777a809166d920b1d8c0d',
             'checkout_id': '8-9c4ffca208adbe5-959b2ce6a6',
             'currency': 'GBP',
             'email': 'hackett.richmond@example.com',
@@ -233,36 +226,31 @@ IczOqlDDcm8YJ1WNIHvTqg4Qa5/4GcMn69z0NGtYStPbex2AmNwulZaSqXx73qon
             'subscription_id': '1',
             'subscription_plan_id': '6',
             'unit_price': 'unit_price',
-            'update_url': 'https://checkout.paddle.com/subscription/update?user=2&subscription=5&hash=1bcef50d4889c8be3b4f043768c2b7dafb935f2a',
+            'update_url': 'https://checkout.paddle.com/subscription/update?user=2&subscription=5&hash=1bcef50d4889c8be3'
+                          'b4f043768c2b7dafb935f2a',
             'user_id': '7',
-            'p_signature': 'XfHAM3yFCGu/ij4IPENHcSciGDzlMwy2PgjQETESUb/ekVnqGIBXy4RSDdI6dr3FgQKTtN6uZ/2OlgHd1fyK4hMr540kVN/XBqX+lqmPK16O0+TH0MfaFG/+qYNtjVw9Yv+WpYfK6ACpXcpOhCxburJxJPGjGRFlzkTG0PxM9vHpDV25PF+m7dWg+WWg4hifpg5G+51YDjXoQa8y6+QNUV9r2f7bRH9s5ABBJDyb+7L6vbM3Lz5HT5PYPc4rlGMl3JkZzBHBkaWtDNB+PNPemaObxsscDLUagT8TLWUrabB8Xsc4PvoyRSGzUw7HUKP0zJ05iCtwkXvfSg8DQWE4d7b8/+G03Uhq0pYLQ77wq/4W1gN8uXVtZ5OGA8eAauVwD15Aq1DlGPTz8NE+QCbvaawsYVZzB4LV1VFG0E+sRAz9lg74yH2XGlT0gTigCMuOm3EASOkaVqSI0yLMj0heWkdwLuTlYYkMPVKyJ6llOVAvJlC6nnoIsaMacwkv34nYg/3s9qNMUfpxO69cqYTTSZh3JGXQ7hEl6QplVG5FhL1KE6pB+JnLQqyOcvalpHd8+BU9DeUzSF/facPQSucN0PyWIXeyKxQLcZOupnzA6ri+/+U51K+PSNq0uJ7Dqqq+9+62JvtR4lQ9ib6X1OFKDlzPkRgzMmeyXmFEaWQr5P8='
+            'p_signature': 'XfHAM3yFCGu/ij4IPENHcSciGDzlMwy2PgjQETESUb/ekVnqGIBXy4RSDdI6dr3FgQKTtN6uZ/2OlgHd1fyK4hMr540'
+                           'kVN/XBqX+lqmPK16O0+TH0MfaFG/+qYNtjVw9Yv+WpYfK6ACpXcpOhCxburJxJPGjGRFlzkTG0PxM9vHpDV25PF+m7d'
+                           'Wg+WWg4hifpg5G+51YDjXoQa8y6+QNUV9r2f7bRH9s5ABBJDyb+7L6vbM3Lz5HT5PYPc4rlGMl3JkZzBHBkaWtDNB+P'
+                           'NPemaObxsscDLUagT8TLWUrabB8Xsc4PvoyRSGzUw7HUKP0zJ05iCtwkXvfSg8DQWE4d7b8/+G03Uhq0pYLQ77wq/4W'
+                           '1gN8uXVtZ5OGA8eAauVwD15Aq1DlGPTz8NE+QCbvaawsYVZzB4LV1VFG0E+sRAz9lg74yH2XGlT0gTigCMuOm3EASOk'
+                           'aVqSI0yLMj0heWkdwLuTlYYkMPVKyJ6llOVAvJlC6nnoIsaMacwkv34nYg/3s9qNMUfpxO69cqYTTSZh3JGXQ7hEl6Q'
+                           'plVG5FhL1KE6pB+JnLQqyOcvalpHd8+BU9DeUzSF/facPQSucN0PyWIXeyKxQLcZOupnzA6ri+/+U51K+PSNq0uJ7Dq'
+                           'qq+9+62JvtR4lQ9ib6X1OFKDlzPkRgzMmeyXmFEaWQr5P8='
         }
         response = client.post(reverse("payments:paddle_webhook"), data)
         assert response.status_code == 400
 
-
     def test_post_invalid_signature(
         self, client: Client, settings
     ):
-        settings.PADDLE_PUBLIC_KEY = """-----BEGIN PUBLIC KEY-----
-MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAwuEU7R9nHgWwWy5p9ws3
-iORHpFn1L8PkdzNtlZaltck5lD5qcUzmQJiW572LzO8oNFhPgPpTnrvcHfCFTLjc
-MmavzroWKiKCf3fn3d7k60D5HDMy4n/+PP6hV2fVnk3Iq3uhxMK5DkKRPqynAFx/
-OX20ijvuWGH3rSmmu/JjN0k7QIcMhSdpZuJ7eqtPtBSdg8uRWr8U2ZL2Wufu0xIF
-pDBxEK7f+0ECq0x7GftrtvLnbTV4SMblSnN90RMocNsRoul+Ohx4unqLxprPh279
-h8iqJspXhb8hKm5PuKuv9N3AXOZzckRTQSFtT/fE3FJm0CToR614r01qc+yqft0e
-scTVNY95gug3aqKmjFdwLBVArdycU9+mF7WvmCDUshjot9CDHKXJCkh2Whfwr9Mq
-+NN4fu6nd/OF3xaq5jZjN07EyfzYKBU1GBhg3uNfR6v4aogQhKByFwtUUyjV7UaO
-yOGH9AMXwv0W/GzDvtZlPwYWUjj9OsJJASG+fYYdwvZRKrs88gTqW0nVXCLgAH3q
-a8hsFHngHuJmCkllv/U9JdSiNm2j+ThIXZP+sGb7aT65eYGni7AIBZf56f+gFdCM
-IczOqlDDcm8YJ1WNIHvTqg4Qa5/4GcMn69z0NGtYStPbex2AmNwulZaSqXx73qon
-7GiVDmdU0t9KRSj9F3nAXVMCAwEAAQ==
-    -----END PUBLIC KEY-----"""
+        settings.PADDLE_PUBLIC_KEY = PADDLE_TESTING_PUBKEY
 
         data = {
             'alert_id': '38713417',
             'alert_name': 'subscription_created',
-            'cancel_url': 'https://checkout.paddle.com/subscription/cancel?user=7&subscription=6&hash=1b1770968848660fd12777a809166d920b1d8c0d',
+            'cancel_url': 'https://checkout.paddle.com/subscription/cancel?user=7&subscription=6&hash=1b1770968848660fd'
+                          '12777a809166d920b1d8c0d',
             'checkout_id': '8-9c4ffca208adbe5-959b2ce6a6',
             'currency': 'GBP',
             'email': 'hackett.richmond@example.com',
@@ -275,9 +263,17 @@ IczOqlDDcm8YJ1WNIHvTqg4Qa5/4GcMn69z0NGtYStPbex2AmNwulZaSqXx73qon
             'subscription_id': '1',
             'subscription_plan_id': '6',
             'unit_price': 'unit_price',
-            'update_url': 'https://checkout.paddle.com/subscription/update?user=2&subscription=5&hash=1bcef50d4889c8be3b4f043768c2b7dafb935f2a',
+            'update_url': 'https://checkout.paddle.com/subscription/update?user=2&subscription=5&hash=1bcef50d4889c8be3'
+                          'b4f043768c2b7dafb935f2a',
             'user_id': '7',
-            'p_signature': 'XfHAM3yFCGu/ij4IPENHcSciGDzlMwy2PgjQETESUb/ekVnqGIBXy4RSDdI6dr3FgQKTtN6uZ/2OlgHd1fyK4hMr540kVN/XBqX+lqmPK16O0+TH0MfaFG/+qYNtjVw9Yv+WpYfK6ACpXcpOhCxburJxJPGjGRFlzkTG0PxM9vHpDV25PF+m7dWg+WWg4hifpg5G+51YDjXoQa8y6+QNUV9r2f7bRH9s5ABBJDyb+7L6vbM3Lz5HT5PYPc4rlGMl3JkZzBHBkaWtDNB+PNPemaObxsscDLUagT8TLWUrabB8Xsc4PvoyRSGzUw7HUKP0zJ05iCtwkXvfSg8DQWE4d7b8/+G03Uhq0pYLQ77wq/4W1gN8uXVtZ5OGA8eAauVwD15Aq1DlGPTz8NE+QCbvaawsYVZzB4LV1VFG0E+sRAz9lg74yH2XGlT0gTigCMuOm3EASOkaVqSI0yLMj0heWkdwLuTlYYkMPVKyJ6llOVAvJlC6nnoIsaMacwkv34nYg/3s9qNMUfpxO69cqYTTSZh3JGXQ7hEl6QplVG5FhL1KE6pB+JnLQqyOcvalpHd8+BU9DeUzSF/facPQSucN0PyWIXeyKxQLcZOupnzA6ri+/+U51K+PSNq0uJ7Dqqq+9+62JvtR4lQ9ib6X1OFKDlzPkRgzMmeyXmFEaWQr5P8='
+            'p_signature': 'XfHAM3yFCGu/ij4IPENHcSciGDzlMwy2PgjQETESUb/ekVnqGIBXy4RSDdI6dr3FgQKTtN6uZ/2OlgHd1fyK4hMr540'
+                           'kVN/XBqX+lqmPK16O0+TH0MfaFG/+qYNtjVw9Yv+WpYfK6ACpXcpOhCxburJxJPGjGRFlzkTG0PxM9vHpDV25PF+m7d'
+                           'Wg+WWg4hifpg5G+51YDjXoQa8y6+QNUV9r2f7bRH9s5ABBJDyb+7L6vbM3Lz5HT5PYPc4rlGMl3JkZzBHBkaWtDNB+P'
+                           'NPemaObxsscDLUagT8TLWUrabB8Xsc4PvoyRSGzUw7HUKP0zJ05iCtwkXvfSg8DQWE4d7b8/+G03Uhq0pYLQ77wq/4W'
+                           '1gN8uXVtZ5OGA8eAauVwD15Aq1DlGPTz8NE+QCbvaawsYVZzB4LV1VFG0E+sRAz9lg74yH2XGlT0gTigCMuOm3EASOk'
+                           'aVqSI0yLMj0heWkdwLuTlYYkMPVKyJ6llOVAvJlC6nnoIsaMacwkv34nYg/3s9qNMUfpxO69cqYTTSZh3JGXQ7hEl6Q'
+                           'plVG5FhL1KE6pB+JnLQqyOcvalpHd8+BU9DeUzSF/facPQSucN0PyWIXeyKxQLcZOupnzA6ri+/+U51K+PSNq0uJ7Dq'
+                           'qq+9+62JvtR4lQ9ib6X1OFKDlzPkRgzMmeyXmFEaWQr5P8='
         }
 
         # test invalid signature
@@ -285,37 +281,43 @@ IczOqlDDcm8YJ1WNIHvTqg4Qa5/4GcMn69z0NGtYStPbex2AmNwulZaSqXx73qon
         response = client.post(reverse("payments:paddle_webhook"), data)
         assert response.status_code == 403
 
-
     def test_post_invalid_action(
         self, user: django_settings.AUTH_USER_MODEL, client: Client, django_user_model, settings
     ):
-        settings.PADDLE_PUBLIC_KEY = """-----BEGIN PUBLIC KEY-----
-MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAwuEU7R9nHgWwWy5p9ws3
-iORHpFn1L8PkdzNtlZaltck5lD5qcUzmQJiW572LzO8oNFhPgPpTnrvcHfCFTLjc
-MmavzroWKiKCf3fn3d7k60D5HDMy4n/+PP6hV2fVnk3Iq3uhxMK5DkKRPqynAFx/
-OX20ijvuWGH3rSmmu/JjN0k7QIcMhSdpZuJ7eqtPtBSdg8uRWr8U2ZL2Wufu0xIF
-pDBxEK7f+0ECq0x7GftrtvLnbTV4SMblSnN90RMocNsRoul+Ohx4unqLxprPh279
-h8iqJspXhb8hKm5PuKuv9N3AXOZzckRTQSFtT/fE3FJm0CToR614r01qc+yqft0e
-scTVNY95gug3aqKmjFdwLBVArdycU9+mF7WvmCDUshjot9CDHKXJCkh2Whfwr9Mq
-+NN4fu6nd/OF3xaq5jZjN07EyfzYKBU1GBhg3uNfR6v4aogQhKByFwtUUyjV7UaO
-yOGH9AMXwv0W/GzDvtZlPwYWUjj9OsJJASG+fYYdwvZRKrs88gTqW0nVXCLgAH3q
-a8hsFHngHuJmCkllv/U9JdSiNm2j+ThIXZP+sGb7aT65eYGni7AIBZf56f+gFdCM
-IczOqlDDcm8YJ1WNIHvTqg4Qa5/4GcMn69z0NGtYStPbex2AmNwulZaSqXx73qon
-7GiVDmdU0t9KRSj9F3nAXVMCAwEAAQ==
-    -----END PUBLIC KEY-----"""
+        settings.PADDLE_PUBLIC_KEY = PADDLE_TESTING_PUBKEY
 
         # test invalid action
-        data = {'alert_id': '50588081', 'alert_name': 'subscription_payment_failed', 'amount': '62.94', 'attempt_number': 'attempt_number', 'cancel_url': 'https://checkout.paddle.com/subscription/cancel?user=2&subscription=5&hash=a85ced48fe6f6b1a3872ef501156d911781908e7', 'checkout_id': '5-1228ae93ffdf5e5-31e6270533', 'currency': 'EUR', 'email': 'emanuel77@example.com', 'event_time': '2019-10-01 10:43:12', 'instalments': '8', 'marketing_consent': '', 'next_retry_date': '2019-10-29', 'order_id': '3', 'passthrough': 'adacebde-e424-11e9-a359-2a2ae2dbcce4', 'quantity': '19', 'status': 'active', 'subscription_id': '3', 'subscription_payment_id': '7', 'subscription_plan_id': '6', 'unit_price': 'unit_price', 'update_url': 'https://checkout.paddle.com/subscription/update?user=4&subscription=7&hash=a98d812951615ae44d38988c06b5d3cefe0704fa', 'user_id': '3', 'p_signature': 'cVJvbifnazFSuVsy3CUYwqDEAABqyMOoAPh8uJ4IBQxGfEh+9nxUCFDoATHtd7NXGNs/kKcOHxjxPPyfvK7LJp+yOkNXHyX3ACU0vpI77caPl8XRjq0vRA0MhyMvkQwq1H5Ti7XI5k7B1EYT8k/oovIffe60ow9cVoJKtlvHF/rnZfxhfViI8cMxtdEj5tt9wyCqB1ehghEZEKLGp3AcbR8FXPUS27tsN55yI/A/0MGjNtjoGuwYwji5sUt2vk4W9ZKgzoOuNi9nw8LfBDJ8DbMkIA/JWXaOuaj6X5FU3OItmXVKhE+OBSDjRlZe/VXH7/rpP+rHt1fdkdbBcJvQPMzN6rm4gAkQjO21d6PcGf37NrfvGweyZ9XIJ4Y/q/OU+rHmgusruZyt32YdMdU+EaJ32mpgx90PniBKQ4l6bw+0ITf+Ujf8YUgYFSpMkdMr/iaZ9U+xHpiql+tkC4Mw80T5lfoLdSdBFZuOmIkF0d7s31KP4JEFNO5PSwbKKEcR/b6e5yZCWpmBKPDjuVDd3Y4n4xkzsNXvugKpPZpRDqhY2tRf650AEcpF16AplEDUbbHELhgD1oe+ZAtmWv68SGraI5EOxZ8Jd7rLxRGycoWsnx5HWC2/mQpAzETR9nOQmwfIEmypXSsT22MnT4ZTXeb21OMVdRnIU+ZJ1kg/vpA='}
+        data = {'alert_id': '50588081', 'alert_name': 'subscription_payment_failed', 'amount': '62.94',
+                'attempt_number': 'attempt_number',
+                'cancel_url': 'https://checkout.paddle.com/subscription/cancel?user=2&subscription=5&hash=a85ced48fe6f6'
+                              'b1a3872ef501156d911781908e7',
+                'checkout_id': '5-1228ae93ffdf5e5-31e6270533', 'currency': 'EUR', 'email': 'emanuel77@example.com',
+                'event_time': '2019-10-01 10:43:12', 'instalments': '8', 'marketing_consent': '',
+                'next_retry_date': '2019-10-29', 'order_id': '3', 'passthrough': 'adacebde-e424-11e9-a359-2a2ae2dbcce4',
+                'quantity': '19', 'status': 'active', 'subscription_id': '3', 'subscription_payment_id': '7',
+                'subscription_plan_id': '6', 'unit_price': 'unit_price',
+                'update_url': 'https://checkout.paddle.com/subscription/update?user=4&subscription=7&hash=a98d812951615'
+                              'ae44d38988c06b5d3cefe0704fa',
+                'user_id': '3',
+                'p_signature': 'cVJvbifnazFSuVsy3CUYwqDEAABqyMOoAPh8uJ4IBQxGfEh+9nxUCFDoATHtd7NXGNs/kKcOHxjxPPyfvK7LJp+'
+                               'yOkNXHyX3ACU0vpI77caPl8XRjq0vRA0MhyMvkQwq1H5Ti7XI5k7B1EYT8k/oovIffe60ow9cVoJKtlvHF/rnZf'
+                               'xhfViI8cMxtdEj5tt9wyCqB1ehghEZEKLGp3AcbR8FXPUS27tsN55yI/A/0MGjNtjoGuwYwji5sUt2vk4W9ZKgz'
+                               'oOuNi9nw8LfBDJ8DbMkIA/JWXaOuaj6X5FU3OItmXVKhE+OBSDjRlZe/VXH7/rpP+rHt1fdkdbBcJvQPMzN6rm4'
+                               'gAkQjO21d6PcGf37NrfvGweyZ9XIJ4Y/q/OU+rHmgusruZyt32YdMdU+EaJ32mpgx90PniBKQ4l6bw+0ITf+Ujf'
+                               '8YUgYFSpMkdMr/iaZ9U+xHpiql+tkC4Mw80T5lfoLdSdBFZuOmIkF0d7s31KP4JEFNO5PSwbKKEcR/b6e5yZCWp'
+                               'mBKPDjuVDd3Y4n4xkzsNXvugKpPZpRDqhY2tRf650AEcpF16AplEDUbbHELhgD1oe+ZAtmWv68SGraI5EOxZ8Jd'
+                               '7rLxRGycoWsnx5HWC2/mQpAzETR9nOQmwfIEmypXSsT22MnT4ZTXeb21OMVdRnIU+ZJ1kg/vpA='
+                }
         django_user_model.objects.create_user(username="the bla", uuid=data['passthrough'], email=user.email)
         response = client.post(reverse("payments:paddle_webhook"), data)
         assert response.status_code == 404
-
 
     def test_is_signed_success(self):
         data = {
             'alert_id': '1600749114',
             'alert_name': 'subscription_created',
-            'cancel_url': 'https://checkout.paddle.com/subscription/cancel?user=7&subscription=6&hash=1b1770968848660fd12777a809166d920b1d8c0d',
+            'cancel_url': 'https://checkout.paddle.com/subscription/cancel?user=7&subscription=6&hash=1b1770968848660fd'
+                          '12777a809166d920b1d8c0d',
             'checkout_id': '8-9c4ffca208adbe5-959b2ce6a6',
             'currency': 'GBP',
             'email': 'hackett.richmond@example.com',
@@ -328,33 +330,28 @@ IczOqlDDcm8YJ1WNIHvTqg4Qa5/4GcMn69z0NGtYStPbex2AmNwulZaSqXx73qon
             'subscription_id': '1',
             'subscription_plan_id': '6',
             'unit_price': 'unit_price',
-            'update_url': 'https://checkout.paddle.com/subscription/update?user=2&subscription=5&hash=1bcef50d4889c8be3b4f043768c2b7dafb935f2a',
+            'update_url': 'https://checkout.paddle.com/subscription/update?user=2&subscription=5&hash=1bcef50d4889c8be3'
+                          'b4f043768c2b7dafb935f2a',
             'user_id': '7',
-            'p_signature': 'PjTv5k6zsErNYQQA995Zy8OJrzrDkxL0DkAh8/zp1wCAfq1eDKUc/P0s88mANlU0VqotOtCFmGTJiTwXjd7UWBWZAKZeyOSlDU9TUmljp8TQ1+eJ4yNicbH2BrU5dTQXkSrpIQQ6v2ZegVc4rDYG1iPINHvGIh8TYAVW6lZE94doiDXOnJyiYdhHher2LdVt/tMaB6BcPLxZyvj5DeeXGXxMsySwhD9Q1lwIpRtdo9xkRGKDMgrsFbhanVdh5LdNBH4lBMknRlS5yRLyqKGfUKX3W0i7GF5AW7dQlK/Afje9vr/CQ2JqdajLhpuJfgHg8e7eEhhwGXTQYk865tyHNfMjsEasWJnq1hryI+yOxJEQ5lnvgIZ0tKZ7rSywZbQcUwSAYxEwL031ulkva05OAHzCaSK90mBIAl+BNLi+068yp/mLSSr+KcoEbem0CIeSKqalhZYAIsJI55V7ByvpCW3Kpy+Nj+zWOkYRFOrAcOCBM7SqyIm8LR0cGrFuGM9mE+I4gqxkiV1fxyYM2zFa9IpLhFZa15GG3BGzZsRHr/+0i9tAq9DJjBbI0wn0hN/XpdjeVklitVendTvaYcKFRRSQzS3h/jJFJwFdUZHdk73km/UoefNtYSzTLYa7r+FMbb7ouIT4804Hd9S0NcSXniN36cTMmAaalSIi9YYyNxM='
+            'p_signature': 'PjTv5k6zsErNYQQA995Zy8OJrzrDkxL0DkAh8/zp1wCAfq1eDKUc/P0s88mANlU0VqotOtCFmGTJiTwXjd7UWBWZAKZ'
+                           'eyOSlDU9TUmljp8TQ1+eJ4yNicbH2BrU5dTQXkSrpIQQ6v2ZegVc4rDYG1iPINHvGIh8TYAVW6lZE94doiDXOnJyiYd'
+                           'hHher2LdVt/tMaB6BcPLxZyvj5DeeXGXxMsySwhD9Q1lwIpRtdo9xkRGKDMgrsFbhanVdh5LdNBH4lBMknRlS5yRLyq'
+                           'KGfUKX3W0i7GF5AW7dQlK/Afje9vr/CQ2JqdajLhpuJfgHg8e7eEhhwGXTQYk865tyHNfMjsEasWJnq1hryI+yOxJEQ'
+                           '5lnvgIZ0tKZ7rSywZbQcUwSAYxEwL031ulkva05OAHzCaSK90mBIAl+BNLi+068yp/mLSSr+KcoEbem0CIeSKqalhZY'
+                           'AIsJI55V7ByvpCW3Kpy+Nj+zWOkYRFOrAcOCBM7SqyIm8LR0cGrFuGM9mE+I4gqxkiV1fxyYM2zFa9IpLhFZa15GG3B'
+                           'GzZsRHr/+0i9tAq9DJjBbI0wn0hN/XpdjeVklitVendTvaYcKFRRSQzS3h/jJFJwFdUZHdk73km/UoefNtYSzTLYa7r'
+                           '+FMbb7ouIT4804Hd9S0NcSXniN36cTMmAaalSIi9YYyNxM='
         }
-        pubkey = """-----BEGIN PUBLIC KEY-----
-MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAwuEU7R9nHgWwWy5p9ws3
-iORHpFn1L8PkdzNtlZaltck5lD5qcUzmQJiW572LzO8oNFhPgPpTnrvcHfCFTLjc
-MmavzroWKiKCf3fn3d7k60D5HDMy4n/+PP6hV2fVnk3Iq3uhxMK5DkKRPqynAFx/
-OX20ijvuWGH3rSmmu/JjN0k7QIcMhSdpZuJ7eqtPtBSdg8uRWr8U2ZL2Wufu0xIF
-pDBxEK7f+0ECq0x7GftrtvLnbTV4SMblSnN90RMocNsRoul+Ohx4unqLxprPh279
-h8iqJspXhb8hKm5PuKuv9N3AXOZzckRTQSFtT/fE3FJm0CToR614r01qc+yqft0e
-scTVNY95gug3aqKmjFdwLBVArdycU9+mF7WvmCDUshjot9CDHKXJCkh2Whfwr9Mq
-+NN4fu6nd/OF3xaq5jZjN07EyfzYKBU1GBhg3uNfR6v4aogQhKByFwtUUyjV7UaO
-yOGH9AMXwv0W/GzDvtZlPwYWUjj9OsJJASG+fYYdwvZRKrs88gTqW0nVXCLgAH3q
-a8hsFHngHuJmCkllv/U9JdSiNm2j+ThIXZP+sGb7aT65eYGni7AIBZf56f+gFdCM
-IczOqlDDcm8YJ1WNIHvTqg4Qa5/4GcMn69z0NGtYStPbex2AmNwulZaSqXx73qon
-7GiVDmdU0t9KRSj9F3nAXVMCAwEAAQ==
------END PUBLIC KEY-----"""
+        pubkey = PADDLE_TESTING_PUBKEY
         view = PaddleWebhookView()
-        assert view.is_signed(payload=data, pubkey=pubkey) == True
-
+        assert view.is_signed(payload=data, pubkey=pubkey)
 
     def test_is_signed_error(self):
         data = {
             'alert_id': '1600749114',
             'alert_name': 'subscription_created',
-            'cancel_url': 'https://checkout.paddle.com/subscription/cancel?user=7&subscription=6&hash=1b1770968848660fd12777a809166d920b1d8c0d',
+            'cancel_url': 'https://checkout.paddle.com/subscription/cancel?user=7&subscription=6&hash=1b1770968848660fd'
+                          '12777a809166d920b1d8c0d',
             'checkout_id': '8-9c4ffca208adbe5-959b2ce6a6',
             'currency': 'GBP',
             'email': 'hackett.richmond@example.com',
@@ -367,28 +364,22 @@ IczOqlDDcm8YJ1WNIHvTqg4Qa5/4GcMn69z0NGtYStPbex2AmNwulZaSqXx73qon
             'subscription_id': '1',
             'subscription_plan_id': '6',
             'unit_price': 'unit_price',
-            'update_url': 'https://checkout.paddle.com/subscription/update?user=2&subscription=5&hash=1bcef50d4889c8be3b4f043768c2b7dafb935f2a',
+            'update_url': 'https://checkout.paddle.com/subscription/update?user=2&subscription=5&hash=1bcef50d4889c8be3'
+                          'b4f043768c2b7dafb935f2a',
             'user_id': '7',
-            'p_signature': 'PjTv5k6zsErNYQQA995Zy8OJrzrDkxL0DkAh8/zp1wCAfq1eDKUc/P0s88mANlU0VqotOtCFmGTJiTwXjd7UWBWZAKZeyOSlDU9TUmljp8TQ1+eJ4yNicbH2BrU5dTQXkSrpIQQ6v2ZegVc4rDYG1iPINHvGIh8TYAVW6lZE94doiDXOnJyiYdhHher2LdVt/tMaB6BcPLxZyvj5DeeXGXxMsySwhD9Q1lwIpRtdo9xkRGKDMgrsFbhanVdh5LdNBH4lBMknRlS5yRLyqKGfUKX3W0i7GF5AW7dQlK/Afje9vr/CQ2JqdajLhpuJfgHg8e7eEhhwGXTQYk865tyHNfMjsEasWJnq1hryI+yOxJEQ5lnvgIZ0tKZ7rSywZbQcUwSAYxEwL031ulkva05OAHzCaSK90mBIAl+BNLi+068yp/mLSSr+KcoEbem0CIeSKqalhZYAIsJI55V7ByvpCW3Kpy+Nj+zWOkYRFOrAcOCBM7SqyIm8LR0cGrFuGM9mE+I4gqxkiV1fxyYM2zFa9IpLhFZa15GG3BGzZsRHr/+0i9tAq9DJjBbI0wn0hN/XpdjeVklitVendTvaYcKFRRSQzS3h/jJFJwFdUZHdk73km/UoefNtYSzTLYa7r+FMbb7ouIT4804Hd9S0NcSXniN36cTMmAaalSIi9YYyNxM='
+            'p_signature': 'PjTv5k6zsErNYQQA995Zy8OJrzrDkxL0DkAh8/zp1wCAfq1eDKUc/P0s88mANlU0VqotOtCFmGTJiTwXjd7UWBWZAKZ'
+                           'eyOSlDU9TUmljp8TQ1+eJ4yNicbH2BrU5dTQXkSrpIQQ6v2ZegVc4rDYG1iPINHvGIh8TYAVW6lZE94doiDXOnJyiYd'
+                           'hHher2LdVt/tMaB6BcPLxZyvj5DeeXGXxMsySwhD9Q1lwIpRtdo9xkRGKDMgrsFbhanVdh5LdNBH4lBMknRlS5yRLyq'
+                           'KGfUKX3W0i7GF5AW7dQlK/Afje9vr/CQ2JqdajLhpuJfgHg8e7eEhhwGXTQYk865tyHNfMjsEasWJnq1hryI+yOxJEQ'
+                           '5lnvgIZ0tKZ7rSywZbQcUwSAYxEwL031ulkva05OAHzCaSK90mBIAl+BNLi+068yp/mLSSr+KcoEbem0CIeSKqalhZY'
+                           'AIsJI55V7ByvpCW3Kpy+Nj+zWOkYRFOrAcOCBM7SqyIm8LR0cGrFuGM9mE+I4gqxkiV1fxyYM2zFa9IpLhFZa15GG3B'
+                           'GzZsRHr/+0i9tAq9DJjBbI0wn0hN/XpdjeVklitVendTvaYcKFRRSQzS3h/jJFJwFdUZHdk73km/UoefNtYSzTLYa7r'
+                           '+FMbb7ouIT4804Hd9S0NcSXniN36cTMmAaalSIi9YYyNxM='
         }
-        pubkey = """-----BEGIN PUBLIC KEY-----
-MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAwuEU7R9nHgWwWy5p9ws3
-iORHpFn1L8PkdzNtlZaltck5lD5qcUzmQJiW572LzO8oNFhPgPpTnrvcHfCFTLjc
-MmavzroWKiKCf3fn3d7k60D5HDMy4n/+PP6hV2fVnk3Iq3uhxMK5DkKRPqynAFx/
-OX20ijvuWGH3rSmmu/JjN0k7QIcMhSdpZuJ7eqtPtBSdg8uRWr8U2ZL2Wufu0xIF
-pDBxEK7f+0ECq0x7GftrtvLnbTV4SMblSnN90RMocNsRoul+Ohx4unqLxprPh279
-h8iqJspXhb8hKm5PuKuv9N3AXOZzckRTQSFtT/fE3FJm0CToR614r01qc+yqft0e
-scTVNY95gug3aqKmjFdwLBVArdycU9+mF7WvmCDUshjot9CDHKXJCkh2Whfwr9Mq
-+NN4fu6nd/OF3xaq5jZjN07EyfzYKBU1GBhg3uNfR6v4aogQhKByFwtUUyjV7UaO
-yOGH9AMXwv0W/GzDvtZlPwYWUjj9OsJJASG+fYYdwvZRKrs88gTqW0nVXCLgAH3q
-a8hsFHngHuJmCkllv/U9JdSiNm2j+ThIXZP+sGb7aT65eYGni7AIBZf56f+gFdCM
-IczOqlDDcm8YJ1WNIHvTqg4Qa5/4GcMn69z0NGtYStPbex2AmNwulZaSqXx73qon
-7GiVDmdU0t9KRSj9F3nAXVMCAwEAAQ==
------END PUBLIC KEY-----"""
+        pubkey = PADDLE_TESTING_PUBKEY
         data['alert_id'] = 'foo'
         view = PaddleWebhookView()
-        assert view.is_signed(payload=data, pubkey=pubkey) == False
-
+        assert not view.is_signed(payload=data, pubkey=pubkey)
 
     def test_subscription_created(self, user: django_settings.AUTH_USER_MODEL):
         data = {
@@ -428,8 +419,7 @@ IczOqlDDcm8YJ1WNIHvTqg4Qa5/4GcMn69z0NGtYStPbex2AmNwulZaSqXx73qon
         assert user.cancellation_effective_date is None
         assert user.vendor_subscription_status == data['status']
         assert user.plan_id == data['subscription_plan_id']
-        assert user.is_customer == True
-
+        assert user.is_customer
 
     def test_subscription_updated(
         self, user: django_settings.AUTH_USER_MODEL
@@ -478,8 +468,7 @@ IczOqlDDcm8YJ1WNIHvTqg4Qa5/4GcMn69z0NGtYStPbex2AmNwulZaSqXx73qon
         assert user.cancellation_effective_date is None
         assert user.vendor_subscription_status == data['status']
         assert user.plan_id == data['subscription_plan_id']
-        assert user.is_customer == True
-
+        assert user.is_customer
 
     def test_subscription_cancelled(
         self, user: django_settings.AUTH_USER_MODEL
@@ -518,7 +507,7 @@ IczOqlDDcm8YJ1WNIHvTqg4Qa5/4GcMn69z0NGtYStPbex2AmNwulZaSqXx73qon
         )
         assert user.vendor_subscription_status == data['status']
         assert user.plan_id == data['subscription_plan_id']
-        assert user.is_customer == True
+        assert user.is_customer
 
 
 class TestChangePlanView:
@@ -539,7 +528,6 @@ class TestChangePlanView:
         # test get, not allowed
         assert client.get(reverse("payments:change_plan")).status_code == 405
 
-
     def test_invalid_form(
         self, user: django_settings.AUTH_USER_MODEL, client: Client, settings: django_settings
     ):
@@ -557,7 +545,6 @@ class TestChangePlanView:
         data = {"plan_id": ""}
         assert client.post(reverse("payments:change_plan"), data).status_code == 302
 
-
     def test_invalid_plan_id(
         self, user: django_settings.AUTH_USER_MODEL, client: Client, settings: django_settings
     ):
@@ -573,7 +560,6 @@ class TestChangePlanView:
         # test invalid plan id
         data = {"plan_id": "non existent"}
         assert client.post(reverse("payments:change_plan"), data).status_code == 302
-
 
     def test_valid_request(
         self, user: django_settings.AUTH_USER_MODEL, client: Client, settings: django_settings, requests_mock: mocker,
@@ -627,8 +613,8 @@ class TestChangePlanView:
 
         # test invalid plans
         view = ChangePlanView()
-        assert view.update_paddle_plan(user=user, plan_id=None) == False
-        assert view.update_paddle_plan(user=user, plan_id="some stuff") == False
+        assert not view.update_paddle_plan(user=user, plan_id=None)
+        assert not view.update_paddle_plan(user=user, plan_id="some stuff")
 
     def test_update_paddle_plan_invalid_status_code(
         self, user: django_settings.AUTH_USER_MODEL, settings: django_settings, requests_mock: mocker
@@ -644,7 +630,7 @@ class TestChangePlanView:
         # test invalid status code
         requests_mock.post("https://vendors.paddle.com/api/2.0/subscription/users/update", status_code=999)
         view = ChangePlanView()
-        assert view.update_paddle_plan(user=user, plan_id='pro_plan_id') == False
+        assert not view.update_paddle_plan(user=user, plan_id='pro_plan_id')
 
     def test_update_paddle_plan_unsuccsessfull_request(
         self, user: django_settings.AUTH_USER_MODEL, settings: django_settings, requests_mock: mocker
@@ -664,7 +650,7 @@ class TestChangePlanView:
             json={"success": False}
         )
         view = ChangePlanView()
-        assert view.update_paddle_plan(user=user, plan_id='pro_plan_id') == False
+        assert not view.update_paddle_plan(user=user, plan_id='pro_plan_id')
 
     def test_update_paddle_plan_valid_request(
         self, user: django_settings.AUTH_USER_MODEL, settings: django_settings, requests_mock: mocker
@@ -698,5 +684,5 @@ class TestChangePlanView:
             json=data
         )
         view = ChangePlanView()
-        assert view.update_paddle_plan(user=user, plan_id='pro_plan_id') == True
+        assert view.update_paddle_plan(user=user, plan_id='pro_plan_id')
         assert user.vendor_subscription_id == data['response']['subscription_id']  # type: ignore

@@ -4,6 +4,7 @@ from {{ cookiecutter.project_slug }}.payments.plan import plan_by_id
 
 pytestmark = pytest.mark.django_db
 
+
 def test_plan_by_id(user: settings.AUTH_USER_MODEL, settings):
     settings.SAAS_PLANS = [
         {
