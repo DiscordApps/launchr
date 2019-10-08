@@ -1,4 +1,5 @@
 .*
+celerybeat.pid
 !.coveragerc
 !.envs
 !.pylintrc
