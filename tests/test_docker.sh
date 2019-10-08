@@ -28,8 +28,8 @@ docker-compose -f local.yml build
 # run the project's type checks
 docker-compose -f local.yml run django mypy launchr_docker_test
 
-# Run black with --check option
-#docker-compose -f local.yml run django black --check --diff  --exclude 'migrations' ./
+# Run flake8
+docker-compose -f local.yml run django flake8
 
 # run the project's tests
 docker-compose -f local.yml run django pytest --cov --cov-report xml
@@ -43,3 +43,5 @@ docker-compose -f local.yml run django python manage.py makemigrations --dry-run
 
 # Test support for translations
 docker-compose -f local.yml run django python manage.py makemessages
+
+rm -rf .cache/docker
