@@ -4,6 +4,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.views.generic import TemplateView
 from django.views import defaults as default_views
+from django.http import HttpResponse
 from {{cookiecutter.project_slug}}.payments.views import PricingView
 
 urlpatterns = [
@@ -29,6 +30,7 @@ urlpatterns = [
     path("beta/", include("{{ cookiecutter.project_slug }}.beta.urls", namespace="beta")),
     {% endif -%}
     path('robots.txt', TemplateView.as_view(template_name="robots.txt", content_type='text/plain')),
+    path('health_check/', lambda r: HttpResponse("ok"),),
     # Your stuff: custom urls includes go here
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
