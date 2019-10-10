@@ -228,9 +228,3 @@ pip-selfcheck.json
 .idea/
 
 .pytest_cache/
-deploy.sh
-
-# production
-{{cookiecutter.project_slug}}/production.yml
-{{cookiecutter.project_slug}}/compose/production/
-prod
