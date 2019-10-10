@@ -1,4 +1,4 @@
-FROM python:3.6-alpine
+FROM python:3.7-alpine3.10
 
 ENV PYTHONUNBUFFERED 1
 
@@ -19,24 +19,24 @@ RUN apk update \
 COPY ./requirements /requirements
 RUN pip install -r /requirements/local.txt
 
-COPY ./compose/local/django/entrypoint /entrypoint
-RUN sed -i 's/\r$//g' /entrypoint
-RUN chmod +x /entrypoint
+COPY ./compose/local/django /scripts
 
-COPY ./compose/local/django/start /start
-RUN sed -i 's/\r$//g' /start
-RUN chmod +x /start
-COPY ./compose/local/django/celery/worker/start /start-celeryworker
-RUN sed -i 's/\r$//g' /start-celeryworker
-RUN chmod +x /start-celeryworker
-
-COPY ./compose/local/django/celery/beat/start /start-celerybeat
-RUN sed -i 's/\r$//g' /start-celerybeat
-RUN chmod +x /start-celerybeat
-
-COPY ./compose/local/django/celery/flower/start /start-flower
-RUN sed -i 's/\r$//g' /start-flower
-RUN chmod +x /start-flower
+RUN mv /scripts/entrypoint /entrypoint \
+    && mv /scripts/start /start \
+    && mv /scripts/celery/worker/start /start-celeryworker \
+    && mv /scripts/celery/beat/start /start-celerybeat \
+    && mv /scripts/celery/flower/start /start-flower \
+    && rm -r /scripts \
+    && sed -i 's/\r$//g' /entrypoint \
+    && chmod +x /entrypoint \
+    && sed -i 's/\r$//g' /start \
+    && chmod +x /start \
+    && sed -i 's/\r$//g' /start-celeryworker \
+    && chmod +x /start-celeryworker \
+    && sed -i 's/\r$//g' /start-celerybeat \
+    && chmod +x /start-celerybeat \
+    && sed -i 's/\r$//g' /start-flower \
+    && chmod +x /start-flower
 
 WORKDIR /app
 
