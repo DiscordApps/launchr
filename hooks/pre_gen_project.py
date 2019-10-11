@@ -8,14 +8,6 @@ TODO: ? restrict Cookiecutter Django project initialization to Python 3.x enviro
 """
 from __future__ import print_function
 
-import sys
-
-TERMINATOR = "\x1b[0m"
-WARNING = "\x1b[1;33m [WARNING]: "
-INFO = "\x1b[1;33m [INFO]: "
-HINT = "\x1b[3;33m"
-SUCCESS = "\x1b[1;32m [SUCCESS]: "
-
 project_slug = "{{ cookiecutter.project_slug }}"
 if hasattr(project_slug, "isidentifier"):
     assert (

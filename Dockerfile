@@ -1,10 +1,12 @@
-FROM python:3.7-alpine
+FROM python:3.7-alpine3.10
+RUN apk add rsync
 
-RUN pip install cookiecutter==1.6.0
+RUN pip install cookiecutter==1.6.0 colorama==0.4.1 pytz
 
 RUN mkdir /out
 ADD . /template
 
-CMD cookiecutter /template --output-dir /out
+ENTRYPOINT ["python", "/template/generate.py"]
+CMD ["new"]
 
 
