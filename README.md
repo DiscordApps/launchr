@@ -33,7 +33,4 @@ Generate a new project in your current working directory by running
 docker run --rm -it -v ${PWD}:/out jayfk/launchr
 ```
 
-Start up the stack with
-```
-docker-compose -f local.yml up
-```
+[![asciicast](https://asciinema.org/a/273741.svg)](https://asciinema.org/a/273741)
